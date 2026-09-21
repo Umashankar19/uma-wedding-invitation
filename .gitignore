@@ -1,0 +1,14 @@
+/.tmp_beginning.png
+/.tmp_fullpage.png
+/.tmp_page3_clip.png
+/.tmp_page3_direct3.png
+/.tmp_page3_final.png
+/.tmp_page3_full_frame.png
+/.tmp_page3_snapshot.png
+/event-card-design-preview-tiles.svg
+/event-card-design-preview.svg
+/event-timeline-react
+/share-preview.svg
+.tmp_*.png
+.venv/
+assets/_backup_before_opt_20260921/

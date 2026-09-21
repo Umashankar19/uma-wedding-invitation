@@ -1,0 +1,7 @@
+Place event thumbnail images here with these exact filenames:
+
+- shagun-kalash.jpg     (Shubh Shagun - 22 Nov)
+- uma-haldi.jpg         (Uma's Haldi - 23 Nov)
+- priti-mehendi.jpg     (Priti's Haldi & Mehendi - 24 Nov)
+- wedding-mandap.jpg    (Wedding Day - 25 Nov)
+- vadhu-aagman.jpg      (Vadhu Aagman / Dwiragman - 3 Dec)

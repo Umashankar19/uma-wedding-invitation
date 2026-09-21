@@ -1,0 +1,4 @@
+Drop the finished background artwork for #finale here as design.png.
+Recommended: portrait PNG/JPG, 1080x1920 or similar.
+The artwork should contain the complete page border/frame.
+HTML content is layered above this artwork.
