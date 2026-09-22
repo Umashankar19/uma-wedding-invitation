@@ -111,14 +111,26 @@ const drawer=document.getElementById("drawer");
 document.getElementById("menuBtn").onclick=()=>drawer.classList.add("open");
 document.getElementById("closeMenu").onclick=()=>drawer.classList.remove("open");
 
-// let musicOn=false;
-// function toggleMusic(){
-//   musicOn=!musicOn;
-//   document.getElementById("musicBtn").textContent=musicOn?"♫":"♪";
-//   document.getElementById("musicHint").textContent=musicOn?"♫ Music On":"♫ Play Music";
-// }
-// document.getElementById("musicBtn").onclick=toggleMusic;
-// document.getElementById("musicHint").onclick=toggleMusic;
+let musicOn=false;
+const bgMusic=document.getElementById("bgMusic");
+function toggleMusic(){
+  musicOn=!musicOn;
+  if(bgMusic){
+    if(musicOn){
+      bgMusic.loop=true;
+      bgMusic.play().catch(()=>{musicOn=false;syncMusicUI();});
+    }else{
+      bgMusic.pause();
+    }
+  }
+  syncMusicUI();
+}
+function syncMusicUI(){
+  document.getElementById("musicBtn").textContent=musicOn?"♫":"♪";
+  document.getElementById("musicHint").textContent=musicOn?"♫ Music On":"♫ Play Music";
+}
+document.getElementById("musicBtn").onclick=toggleMusic;
+document.getElementById("musicHint").onclick=toggleMusic;
 
 // Countdown: Wedding day, 25 November 2026, 12:00 local time.
 const weddingDate = new Date("2026-11-25T20:00:00");
@@ -155,9 +167,9 @@ function buildWeddingCalendarIcs() {
   const events = [
     ["Shubh Shagun", "20261122", "Korthu"],
     ["Uma's Haldi", "20261123", "Korthu"],
-    ["Priti's Haldi & Mehendi", "20261124", "Korthu"],
+    ["Priti's Haldi & Mehendi", "20261124", "Gandoul"],
     ["Wedding", "20261125", "Gandoul"],
-    ["Vadhu Aagman (Dwiragman)", "20261103", "Korthu"]
+    ["Vadhu Aagman (Dwiragman)", "20261203", "Korthu"]
   ];
 
   const nowStamp = new Date()
@@ -238,9 +250,9 @@ document.addEventListener("DOMContentLoaded", function () {
     pritiHaldi: {
       title: "Priti's Haldi & Mehendi",
       date: "24 November 2026",
-      venueName: "Korthu",
-      address: "Korthu",
-      mapLink: KORTHU_MAP_LINK
+      venueName: "Gandoul",
+      address: "Gandoul",
+      mapLink: GANDOUL_MAP_LINK
     },
 
     wedding: {
@@ -253,7 +265,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     vadhuAagman: {
       title: "Vadhu Aagman (Dwiragman)",
-      date: "3 November 2026",
+      date: "3 December 2026",
       venueName: "Korthu",
       address: "Korthu",
       mapLink: KORTHU_MAP_LINK
