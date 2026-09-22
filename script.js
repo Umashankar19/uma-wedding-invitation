@@ -230,51 +230,19 @@ function addDaysToDateString(yyyymmdd) {
   return `${y}${m}${d}`;
 }
 
-function buildWeddingCalendarIcs() {
-  const events = [
-    ["Shubh Shagun", "20261122", "Korthu"],
-    ["Uma's Haldi", "20261123", "Korthu"],
-    ["Priti's Haldi & Mehendi", "20261124", "Gandoul"],
-    ["Wedding", "20261125", "Gandoul"],
-    ["Vadhu Aagman (Dwiragman)", "20261203", "Korthu"]
-  ];
-
-  const nowStamp = new Date()
-    .toISOString()
-    .replace(/[-:]/g, "")
-    .replace(/\.\d{3}/, "");
-
-  const lines = [
-    "BEGIN:VCALENDAR",
-    "VERSION:2.0",
-    "CALSCALE:GREGORIAN",
-    "METHOD:PUBLISH",
-    "PRODID:-//PritiUma//Wedding Invitation//EN"
-  ];
-
-  events.forEach(([name, date, venue], index) => {
-    lines.push(
-      "BEGIN:VEVENT",
-      `UID:priti-uma-${index + 1}-${date}@wedding`,
-      `DTSTAMP:${nowStamp}`,
-      `DTSTART;VALUE=DATE:${date}`,
-      `DTEND;VALUE=DATE:${addDaysToDateString(date)}`,
-      `SUMMARY:Priti & Uma - ${name}`,
-      `LOCATION:${venue}`,
-      "END:VEVENT"
-    );
+// Opens Google Calendar's quick-add directly (no file download, works on both
+// Android and iOS) prefilled with the Wedding day details.
+function addWeddingToCalendar() {
+  const start = "20261125";
+  const end = addDaysToDateString(start);
+  const params = new URLSearchParams({
+    action: "TEMPLATE",
+    text: "Priti & Uma - Wedding",
+    dates: `${start}/${end}`,
+    details: "Join us as we celebrate the wedding of Priti & Uma.",
+    location: "Gandoul"
   });
-
-  lines.push("END:VCALENDAR");
-  return lines.join("\r\n");
-}
-
-function downloadWeddingCalendar() {
-  const ics = buildWeddingCalendarIcs();
-  // Direct navigation (no download attribute) so mobile browsers hand the
-  // .ics data straight to the native calendar app's "Add Event" prompt.
-  const dataUrl = "data:text/calendar;charset=utf-8," + encodeURIComponent(ics);
-  window.location.href = dataUrl;
+  window.open(`https://calendar.google.com/calendar/render?${params.toString()}`, "_blank");
 }
 // ===== Event-specific location modal =====
 
@@ -282,7 +250,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const calendarBtn = document.getElementById("calendarBtn");
   if (calendarBtn) {
-    calendarBtn.addEventListener("click", downloadWeddingCalendar);
+    calendarBtn.addEventListener("click", addWeddingToCalendar);
   }
 
   const KORTHU_MAP_LINK =
