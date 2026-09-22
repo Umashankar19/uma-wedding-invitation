@@ -127,10 +127,25 @@ function toggleMusic(){
 }
 function syncMusicUI(){
   document.getElementById("musicBtn").textContent=musicOn?"♫":"♪";
-  document.getElementById("musicHint").textContent=musicOn?"♫ Music On":"♫ Play Music";
 }
 document.getElementById("musicBtn").onclick=toggleMusic;
-document.getElementById("musicHint").onclick=toggleMusic;
+
+// Try to autoplay as soon as the site opens; browsers that block unmuted
+// autoplay will get it started on the very first tap/click instead.
+if(bgMusic){
+  bgMusic.loop=true;
+  bgMusic.play().then(()=>{musicOn=true;syncMusicUI();}).catch(()=>{
+    const startOnFirstInteraction=()=>{
+      if(!musicOn){
+        bgMusic.play().then(()=>{musicOn=true;syncMusicUI();}).catch(()=>{});
+      }
+      document.removeEventListener("click",startOnFirstInteraction);
+      document.removeEventListener("touchstart",startOnFirstInteraction);
+    };
+    document.addEventListener("click",startOnFirstInteraction);
+    document.addEventListener("touchstart",startOnFirstInteraction);
+  });
+}
 
 // Countdown: Wedding day, 25 November 2026, 12:00 local time.
 const weddingDate = new Date("2026-11-25T20:00:00");
