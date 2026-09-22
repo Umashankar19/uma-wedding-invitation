@@ -792,8 +792,8 @@ if (gallery && galleryItems.length) {
 
 // ===== Native share first, WhatsApp fallback =====
 document.getElementById("whatsappShare")?.addEventListener("click",async()=>{
-  const baseSiteUrl="https://umashankar19.github.io/uma-wedding-invitation/";
-  const inviteUrl=baseSiteUrl+"?v=20260922";
+  const baseSiteUrl="https://umapritiwedding.online/";
+  const inviteUrl=baseSiteUrl;
   const videoUrl=baseSiteUrl+"assets/invitation-video.mp4";
   const lines=[
     "\uD83D\uDC90 Priti & Uma \u2014 Wedding Invitation \uD83D\uDC90",
