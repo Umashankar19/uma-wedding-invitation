@@ -792,7 +792,7 @@ if (gallery && galleryItems.length) {
 
 // ===== WhatsApp sharing =====
 document.getElementById("whatsappShare")?.addEventListener("click",async()=>{
-  const text="💐 Priti & Uma — Wedding Invitation 💐\n\n25 November 2026\n\nWith hearts full of love and joy, we are delighted to invite you to celebrate the wedding of Priti & Uma.\nYour presence will make our special day even more memorable. ❤️\n\n✨ Click the link below to view the wedding invitation and all the details:\n🔗 https://umashankar19.github.io/uma-wedding-invitation/\n\n🎥 Invitation video: Invitation Video";
+  const text="Priti & Uma - Wedding Invitation\n\n25 November 2026\n\nWith hearts full of love and joy, we are delighted to invite you to celebrate the wedding of Priti & Uma.\nYour presence will make our special day even more memorable.\n\nClick the link below to view the wedding invitation and all the details:\nhttps://umashankar19.github.io/uma-wedding-invitation/\n\nInvitation video: Invitation Video";
   window.open("https://wa.me/?text="+encodeURIComponent(text),"_blank","noopener,noreferrer");
 });
 /* ============================================================
