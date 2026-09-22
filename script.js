@@ -112,12 +112,20 @@ document.getElementById("menuBtn").onclick=()=>drawer.classList.add("open");
 document.getElementById("closeMenu").onclick=()=>drawer.classList.remove("open");
 
 // Web Audio API gives a sample-accurate, gapless loop (no crossfade hacks needed).
-let musicOn=false, everStarted=false, starting=false;
+let musicOn=false, starting=false;
 let audioCtx=null, sourceNode=null, audioBuffer=null, loadingPromise=null;
 const MUSIC_SRC=document.getElementById("bgMusic")?.getAttribute("src")||"assets/wedding-music.mp3";
 
 function getAudioCtx(){
-  if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+  if(!audioCtx){
+    audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+    // Some browsers only resolve a blocked resume() once a *later* user
+    // gesture unlocks the context; this catches that instead of hanging.
+    audioCtx.onstatechange=()=>{
+      musicOn=!!sourceNode && audioCtx.state==="running";
+      syncMusicUI();
+    };
+  }
   return audioCtx;
 }
 function loadBuffer(){
@@ -137,7 +145,6 @@ function startSource(){
   sourceNode.loop=true;
   sourceNode.connect(ctx.destination);
   sourceNode.start(0);
-  everStarted=true;
 }
 function stopSource(){
   if(sourceNode){
@@ -147,18 +154,21 @@ function stopSource(){
   }
 }
 async function ensurePlaying(){
-  if(sourceNode||starting) return;
+  if(starting) return;
   starting=true;
+  const ctx=getAudioCtx();
+  // Fire-and-forget: call resume() while still inside the gesture call stack
+  // so mobile browsers count it as user-activated, but never block on it —
+  // some browsers leave it pending until a later gesture instead of rejecting.
+  if(ctx.state==="suspended") ctx.resume().catch(()=>{});
   try{
-    const ctx=getAudioCtx();
-    if(ctx.state==="suspended") await ctx.resume();
     await loadBuffer();
     if(!sourceNode) startSource();
-    musicOn=true;
   }catch(e){
-    // Blocked or failed; a later tap/click will retry via the listener below.
+    // Fetch/decode failed; a later tap will retry via the listener below.
   }
   starting=false;
+  musicOn=ctx.state==="running";
   syncMusicUI();
 }
 function stopPlaying(){
@@ -167,7 +177,7 @@ function stopPlaying(){
   syncMusicUI();
 }
 function toggleMusic(){
-  if(sourceNode||musicOn) stopPlaying();
+  if(musicOn) stopPlaying();
   else ensurePlaying();
 }
 function syncMusicUI(){
@@ -178,10 +188,13 @@ document.getElementById("musicBtn").onclick=toggleMusic;
 // Try to start as soon as the site opens; browsers that block audio before any
 // interaction will get it started on the visitor's very first tap/click instead.
 ensurePlaying();
-const startOnFirstInteraction=()=>{
-  if(!everStarted) ensurePlaying();
+const startOnFirstInteraction=(event)=>{
+  // Retire this fallback on the very first interaction, whatever it is, so it
+  // can never fight with an explicit tap on the music button afterwards.
   document.removeEventListener("click",startOnFirstInteraction);
   document.removeEventListener("touchstart",startOnFirstInteraction);
+  const isMusicBtn=event.target.closest && event.target.closest("#musicBtn");
+  if(!isMusicBtn && !musicOn) ensurePlaying();
 };
 document.addEventListener("click",startOnFirstInteraction);
 document.addEventListener("touchstart",startOnFirstInteraction);
