@@ -795,27 +795,37 @@ document.getElementById("whatsappShare")?.addEventListener("click",async()=>{
   const baseSiteUrl="https://umapritiwedding.online/";
   const inviteUrl=baseSiteUrl;
   const videoUrl=baseSiteUrl+"assets/invitation-video.mp4";
-  const lines=[
+  const introLines=[
     "\uD83D\uDC90 Priti & Uma \u2014 Wedding Invitation \uD83D\uDC90",
     "",
     "25 November 2026",
     "",
     "With hearts full of love and joy, we are delighted to invite you to celebrate the wedding of Priti & Uma.",
-    "Your presence will make our special day even more memorable. \u2764\uFE0F",
+    "Your presence will make our special day even more memorable. \u2764\uFE0F"
+  ];
+  const nativeText=[
+    ...introLines,
+    "",
+    "\u2728 Tap to open the wedding invitation details"
+  ].join("\n");
+  const whatsappText=[
+    ...introLines,
     "",
     "\u2728 Click the link below to view the wedding invitation and all the details:",
-    "\uD83D\uDD17 "+inviteUrl
-  ];
-  const text=lines.join("\n");
+    "\uD83D\uDD17 "+inviteUrl,
+    "",
+    "\uD83C\uDFA5 Invitation video:",
+    videoUrl
+  ].join("\n");
   const openWhatsApp=()=>{
-    window.open("https://wa.me/?text="+encodeURIComponent(text),"_blank","noopener,noreferrer");
+    window.open("https://wa.me/?text="+encodeURIComponent(whatsappText),"_blank","noopener,noreferrer");
   };
 
   if(navigator.share){
     try{
       const shareData={
         title:"Priti & Uma — Wedding Invitation",
-        text,
+        text:nativeText,
         url:inviteUrl
       };
       try{
