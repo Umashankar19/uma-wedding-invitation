@@ -204,15 +204,10 @@ function buildWeddingCalendarIcs() {
 
 function downloadWeddingCalendar() {
   const ics = buildWeddingCalendarIcs();
-  const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = "Priti-Uma-Wedding.ics";
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  URL.revokeObjectURL(url);
+  // Direct navigation (no download attribute) so mobile browsers hand the
+  // .ics data straight to the native calendar app's "Add Event" prompt.
+  const dataUrl = "data:text/calendar;charset=utf-8," + encodeURIComponent(ics);
+  window.location.href = dataUrl;
 }
 // ===== Event-specific location modal =====
 
