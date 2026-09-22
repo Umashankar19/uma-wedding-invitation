@@ -3,9 +3,7 @@ const navItems = [
   ["invitation","✉","Invitation"],
   ["beginning","♡","Beginning"],
   ["moments","▧","Gallery"],
-  ["families","♧","Families"],
   ["events","◫","Events"],
-  ["location","⌖","Location"],
   ["countdown","◷","Countdown"]
 ];
 
