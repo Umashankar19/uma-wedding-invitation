@@ -1297,6 +1297,16 @@ footer {
 #countdown .closing-actions .share-icon{
   border:1px solid rgba(184,139,80,.65);
 }
+#countdown .closing-actions .share-svg{
+  width:22px;
+  height:22px;
+  display:block;
+  fill:none;
+  stroke:#fff;
+  stroke-width:2.2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
 #countdown .closing-names{
   font-size:40px;
   line-height:1;
