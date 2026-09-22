@@ -185,19 +185,22 @@ function syncMusicUI(){
 }
 document.getElementById("musicBtn").onclick=toggleMusic;
 
-// Try to start as soon as the site opens; browsers that block audio before any
-// interaction will get it started on the visitor's very first tap/click instead.
+// Try to start as soon as the site opens; most mobile browsers block that
+// without a real tap, so keep retrying on every genuine tap (not a scroll
+// drag, which also fires touchstart) until it actually succeeds.
 ensurePlaying();
-const startOnFirstInteraction=(event)=>{
-  // Retire this fallback on the very first interaction, whatever it is, so it
-  // can never fight with an explicit tap on the music button afterwards.
-  document.removeEventListener("click",startOnFirstInteraction);
-  document.removeEventListener("touchstart",startOnFirstInteraction);
+const tryStartFromInteraction=(event)=>{
   const isMusicBtn=event.target.closest && event.target.closest("#musicBtn");
-  if(!isMusicBtn && !musicOn) ensurePlaying();
+  if(isMusicBtn) return; // the button's own click handler already covers this
+  if(musicOn){
+    document.removeEventListener("click",tryStartFromInteraction);
+    document.removeEventListener("touchend",tryStartFromInteraction);
+    return;
+  }
+  ensurePlaying();
 };
-document.addEventListener("click",startOnFirstInteraction);
-document.addEventListener("touchstart",startOnFirstInteraction);
+document.addEventListener("click",tryStartFromInteraction);
+document.addEventListener("touchend",tryStartFromInteraction);
 
 // Countdown: Wedding day, 25 November 2026, 12:00 local time.
 const weddingDate = new Date("2026-11-25T20:00:00");
