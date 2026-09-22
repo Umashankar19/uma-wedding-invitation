@@ -790,7 +790,7 @@ if (gallery && galleryItems.length) {
 // document.getElementById("wishForm").addEventListener("submit",e=>{e.preventDefault();const ta=e.target.querySelector("textarea"),input=e.target.querySelector("input");const wishes=JSON.parse(localStorage.getItem(WISH_KEY)||"[]");wishes.push({message:ta.value.trim(),name:input.value.trim(),at:Date.now()});localStorage.setItem(WISH_KEY,JSON.stringify(wishes));e.target.reset();alert("Your blessing has been saved on this device ♥")});
 // document.getElementById("rsvpForm").addEventListener("submit",e=>{e.preventDefault();const data={attendance:e.target.attendance.value,guests,food:e.target.querySelector("select").value,at:Date.now()};localStorage.setItem(RSVP_KEY,JSON.stringify(data));document.getElementById("formMessage").textContent="Thank you! Your RSVP has been saved on this device. ♥"});
 
-// ===== WhatsApp sharing =====
+// ===== Native share first, WhatsApp fallback =====
 document.getElementById("whatsappShare")?.addEventListener("click",async()=>{
   const baseSiteUrl="https://umashankar19.github.io/uma-wedding-invitation/";
   const inviteUrl=baseSiteUrl+"?v=20260922";
@@ -810,7 +810,27 @@ document.getElementById("whatsappShare")?.addEventListener("click",async()=>{
     lines.push("", "\uD83C\uDFA5 Invitation video:", videoUrl);
   }
   const text=lines.join("\n");
-  window.open("https://wa.me/?text="+encodeURIComponent(text),"_blank","noopener,noreferrer");
+  const openWhatsApp=()=>{
+    window.open("https://wa.me/?text="+encodeURIComponent(text),"_blank","noopener,noreferrer");
+  };
+
+  if(navigator.share){
+    try{
+      const shareData={
+        title:"Priti & Uma — Wedding Invitation",
+        text,
+        url:inviteUrl
+      };
+      if(!navigator.canShare || navigator.canShare(shareData)){
+        await navigator.share(shareData);
+        return;
+      }
+    }catch(err){
+      if(err && err.name==="AbortError") return;
+    }
+  }
+
+  openWhatsApp();
 });
 /* ============================================================
    ENGAGEMENT PHOTO SWAP GALLERY
