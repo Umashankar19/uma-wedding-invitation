@@ -111,41 +111,80 @@ const drawer=document.getElementById("drawer");
 document.getElementById("menuBtn").onclick=()=>drawer.classList.add("open");
 document.getElementById("closeMenu").onclick=()=>drawer.classList.remove("open");
 
-let musicOn=false;
-const bgMusic=document.getElementById("bgMusic");
-function toggleMusic(){
-  musicOn=!musicOn;
-  if(bgMusic){
-    if(musicOn){
-      bgMusic.loop=true;
-      bgMusic.play().catch(()=>{musicOn=false;syncMusicUI();});
-    }else{
-      bgMusic.pause();
-    }
+// Web Audio API gives a sample-accurate, gapless loop (no crossfade hacks needed).
+let musicOn=false, everStarted=false, starting=false;
+let audioCtx=null, sourceNode=null, audioBuffer=null, loadingPromise=null;
+const MUSIC_SRC=document.getElementById("bgMusic")?.getAttribute("src")||"assets/wedding-music.mp3";
+
+function getAudioCtx(){
+  if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+  return audioCtx;
+}
+function loadBuffer(){
+  if(audioBuffer) return Promise.resolve(audioBuffer);
+  if(!loadingPromise){
+    loadingPromise=fetch(MUSIC_SRC)
+      .then(r=>r.arrayBuffer())
+      .then(data=>getAudioCtx().decodeAudioData(data))
+      .then(buf=>{audioBuffer=buf;return buf;});
   }
+  return loadingPromise;
+}
+function startSource(){
+  const ctx=getAudioCtx();
+  sourceNode=ctx.createBufferSource();
+  sourceNode.buffer=audioBuffer;
+  sourceNode.loop=true;
+  sourceNode.connect(ctx.destination);
+  sourceNode.start(0);
+  everStarted=true;
+}
+function stopSource(){
+  if(sourceNode){
+    try{sourceNode.stop();}catch(e){}
+    sourceNode.disconnect();
+    sourceNode=null;
+  }
+}
+async function ensurePlaying(){
+  if(sourceNode||starting) return;
+  starting=true;
+  try{
+    const ctx=getAudioCtx();
+    if(ctx.state==="suspended") await ctx.resume();
+    await loadBuffer();
+    if(!sourceNode) startSource();
+    musicOn=true;
+  }catch(e){
+    // Blocked or failed; a later tap/click will retry via the listener below.
+  }
+  starting=false;
   syncMusicUI();
+}
+function stopPlaying(){
+  stopSource();
+  musicOn=false;
+  syncMusicUI();
+}
+function toggleMusic(){
+  if(sourceNode||musicOn) stopPlaying();
+  else ensurePlaying();
 }
 function syncMusicUI(){
   document.getElementById("musicBtn").textContent=musicOn?"♫":"♪";
 }
 document.getElementById("musicBtn").onclick=toggleMusic;
 
-// Try to autoplay as soon as the site opens; browsers that block unmuted
-// autoplay will get it started on the very first tap/click instead.
-if(bgMusic){
-  bgMusic.loop=true;
-  bgMusic.play().then(()=>{musicOn=true;syncMusicUI();}).catch(()=>{
-    const startOnFirstInteraction=()=>{
-      if(!musicOn){
-        bgMusic.play().then(()=>{musicOn=true;syncMusicUI();}).catch(()=>{});
-      }
-      document.removeEventListener("click",startOnFirstInteraction);
-      document.removeEventListener("touchstart",startOnFirstInteraction);
-    };
-    document.addEventListener("click",startOnFirstInteraction);
-    document.addEventListener("touchstart",startOnFirstInteraction);
-  });
-}
+// Try to start as soon as the site opens; browsers that block audio before any
+// interaction will get it started on the visitor's very first tap/click instead.
+ensurePlaying();
+const startOnFirstInteraction=()=>{
+  if(!everStarted) ensurePlaying();
+  document.removeEventListener("click",startOnFirstInteraction);
+  document.removeEventListener("touchstart",startOnFirstInteraction);
+};
+document.addEventListener("click",startOnFirstInteraction);
+document.addEventListener("touchstart",startOnFirstInteraction);
 
 // Countdown: Wedding day, 25 November 2026, 12:00 local time.
 const weddingDate = new Date("2026-11-25T20:00:00");
