@@ -806,9 +806,6 @@ document.getElementById("whatsappShare")?.addEventListener("click",async()=>{
     "\u2728 Click the link below to view the wedding invitation and all the details:",
     "\uD83D\uDD17 "+inviteUrl
   ];
-  if(videoUrl){
-    lines.push("", "\uD83C\uDFA5 Invitation video:", videoUrl);
-  }
   const text=lines.join("\n");
   const openWhatsApp=()=>{
     window.open("https://wa.me/?text="+encodeURIComponent(text),"_blank","noopener,noreferrer");
@@ -821,6 +818,18 @@ document.getElementById("whatsappShare")?.addEventListener("click",async()=>{
         text,
         url:inviteUrl
       };
+      try{
+        const res=await fetch(videoUrl,{cache:"no-store"});
+        if(res.ok){
+          const blob=await res.blob();
+          const videoFile=new File([blob],"invitation-video.mp4",{type:blob.type||"video/mp4"});
+          if(!navigator.canShare||navigator.canShare({files:[videoFile]})){
+            shareData.files=[videoFile];
+          }
+        }
+      }catch(_videoErr){
+        // Ignore video-attachment errors and continue with text/url share.
+      }
       if(!navigator.canShare || navigator.canShare(shareData)){
         await navigator.share(shareData);
         return;
