@@ -181,7 +181,12 @@ function toggleMusic(){
   else ensurePlaying();
 }
 function syncMusicUI(){
-  document.getElementById("musicBtn").textContent=musicOn?"♫":"♪";
+  const btn=document.getElementById("musicBtn");
+  const cta=document.getElementById("musicCta");
+  btn.textContent=musicOn?"♫":"♪";
+  btn.setAttribute("aria-label",musicOn?"Pause music":"Play music");
+  btn.classList.toggle("needs-tap",!musicOn);
+  if(musicOn&&cta) cta.classList.remove("show");
 }
 document.getElementById("musicBtn").onclick=toggleMusic;
 
@@ -201,6 +206,17 @@ const tryStartFromInteraction=(event)=>{
 };
 document.addEventListener("click",tryStartFromInteraction);
 document.addEventListener("touchend",tryStartFromInteraction);
+
+// Invite the visitor to tap for music since autoplay usually can't start on
+// its own; the bubble hides itself once music actually starts or after a bit.
+setTimeout(()=>{
+  const cta=document.getElementById("musicCta");
+  if(cta&&!musicOn) cta.classList.add("show");
+},1200);
+setTimeout(()=>{
+  const cta=document.getElementById("musicCta");
+  if(cta) cta.classList.remove("show");
+},6000);
 
 // Countdown: Wedding day, 25 November 2026, 12:00 local time.
 const weddingDate = new Date("2026-11-25T20:00:00");

@@ -11,6 +11,12 @@ main{overflow:hidden}.screen{min-height:100svh;position:relative;padding:58px 18
 .topbar{position:fixed;z-index:30;top:0;left:50%;transform:translateX(-50%);width:min(520px,100%);height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:rgba(255,250,241,.76);backdrop-filter:blur(10px);border-bottom:1px solid rgba(150,100,80,.1)}
 .mini-logo{font-family:"Great Vibes";font-size:27px;color:var(--maroon)}.mini-logo span{font-family:inherit}
 .icon-btn{border:0;background:none;font-size:21px;color:var(--ink);padding:6px}
+.music-toggle-wrap{position:relative;display:flex;align-items:center}
+#musicBtn.needs-tap{animation:musicPulse 1.6s ease-in-out infinite}
+@keyframes musicPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.2);opacity:.65}}
+.music-cta{position:absolute;top:100%;right:0;margin-top:8px;background:var(--maroon);color:#fff;font-size:10px;letter-spacing:.2px;padding:5px 10px;border-radius:12px;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.22);opacity:0;transform:translateY(-4px);pointer-events:none;transition:opacity .3s ease,transform .3s ease;z-index:31}
+.music-cta:after{content:"";position:absolute;bottom:100%;right:14px;border:5px solid transparent;border-bottom-color:var(--maroon)}
+.music-cta.show{opacity:1;transform:translateY(0)}
 .drawer{position:fixed;z-index:50;top:0;right:-320px;width:290px;height:100vh;background:var(--paper);box-shadow:-20px 0 50px rgba(0,0,0,.15);transition:right .3s;padding:22px}.drawer.open{right:0}.drawer-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.drawer nav{display:grid;gap:7px}.drawer nav button{padding:13px;text-align:left;border:1px solid var(--line);background:white;border-radius:12px;color:var(--ink)}
 .hero{background:linear-gradient(180deg,rgba(250,228,211,.2),rgba(100,60,50,.1)),url("assets/hero.jpg") center/cover no-repeat;color:#fff;text-align:center;min-height:100svh}.hero:before{opacity:.1}.hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,239,224,.18),rgba(40,20,20,.55))}
 .hero-content{position:relative;z-index:2;margin-top:45px}.eyebrow{font-size:14px}.hero-kicker{font-size:12px;line-height:1.8;letter-spacing:2px}.hero h1{font-family:"Great Vibes";font-size:64px;font-weight:400;margin:20px 0 4px}.hero h1 span{font-size:35px}.date{letter-spacing:3px;font-size:13px}.quote{font-size:15px;line-height:2;margin:24px auto;max-width:320px}
