@@ -2117,3 +2117,16 @@ footer {
     width:min(324px, calc(100% - ((var(--flow-border-strip) + var(--flow-content-gap)) * 2))) !important;
   }
 }
+
+/* Invitation sharing */
+.invitation-share-dialog { margin: auto; width: min(440px, calc(100% - 32px)); padding: 24px; border: 1px solid #d9bb80; border-radius: 18px; background: #fff9ef; color: #472b31; box-shadow: 0 16px 60px #0005; }
+.invitation-share-dialog::backdrop { background: #20131bb3; }
+.invitation-share-dialog h2 { margin: 0 0 20px; }
+.invitation-share-dialog label, .invitation-share-dialog small { display: block; }
+.invitation-share-dialog input { box-sizing: border-box; width: 100%; margin: 8px 0; padding: 12px; border: 1px solid #ad8b70; border-radius: 8px; font: inherit; background: white; color: #472b31; }
+.invitation-share-dialog small { line-height: 1.5; }
+.invitation-share-dialog p { margin: 18px 0; line-height: 1.5; }
+.invitation-share-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
+.invitation-share-actions button { padding: 10px 16px; border: 1px solid #805147; border-radius: 8px; background: #fff9ef; color: #472b31; font: inherit; cursor: pointer; }
+#chooseInvitationApp { background: #733943; color: white; }
+.invitation-share-actions button:disabled { opacity: .5; cursor: wait; }

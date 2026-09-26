@@ -805,125 +805,133 @@ if (gallery && galleryItems.length) {
 // document.getElementById("wishForm").addEventListener("submit",e=>{e.preventDefault();const ta=e.target.querySelector("textarea"),input=e.target.querySelector("input");const wishes=JSON.parse(localStorage.getItem(WISH_KEY)||"[]");wishes.push({message:ta.value.trim(),name:input.value.trim(),at:Date.now()});localStorage.setItem(WISH_KEY,JSON.stringify(wishes));e.target.reset();alert("Your blessing has been saved on this device ♥")});
 // document.getElementById("rsvpForm").addEventListener("submit",e=>{e.preventDefault();const data={attendance:e.target.attendance.value,guests,food:e.target.querySelector("select").value,at:Date.now()};localStorage.setItem(RSVP_KEY,JSON.stringify(data));document.getElementById("formMessage").textContent="Thank you! Your RSVP has been saved on this device. ♥"});
 
-// ===== Native share first, WhatsApp fallback =====
-function getRecipientNameFromUrl(){
-  const params=new URLSearchParams(window.location.search);
-  const raw=
-    params.get("recipient") ||
-    params.get("to") ||
-    params.get("name") ||
-    "";
-  return raw.trim().slice(0,50);
+// ===== Fresh video invitation share =====
+function normalizeRecipientName(value){
+  return Array.from(value.replace(/\s+/g," ").trim()).slice(0,100).join("");
 }
 
-let invitationVideoFilePromise=null;
-
-function createInvitationVideoFileLoader(videoCandidates){
-  return async function loadInvitationVideoFile(){
-    for(const candidateUrl of videoCandidates){
-      try{
-        const res=await fetch(candidateUrl,{cache:"force-cache"});
-        if(!res.ok) continue;
-        const blob=await res.blob();
-        return new File([blob],"invitation-video.mp4",{type:blob.type||"video/mp4"});
-      }catch(_err){
-        // Try the next candidate.
-      }
-    }
-    return null;
-  };
-}
-
-function withTimeout(promise, timeoutMs){
-  return new Promise(resolve=>{
-    let settled=false;
-    promise.then(value=>{
-      if(settled) return;
-      settled=true;
-      resolve(value);
-    }).catch(()=>{
-      if(settled) return;
-      settled=true;
-      resolve(null);
-    });
-    setTimeout(()=>{
-      if(settled) return;
-      settled=true;
-      resolve(null);
-    },timeoutMs);
-  });
-}
-
-document.getElementById("whatsappShare")?.addEventListener("click",async()=>{
-  const baseSiteUrl="https://umapritiwedding.online/";
-  const inviteUrl=baseSiteUrl;
-  const mediaBaseUrl=new URL("./",window.location.href).href;
-  const videoVersion="20260926v14";
-  const videoCandidates=[
-    mediaBaseUrl+"assets/invitation%20video.mp4?v="+videoVersion,
-    mediaBaseUrl+"assets/invitation video.mp4?v="+videoVersion
-  ];
-  const loadInvitationVideoFile=createInvitationVideoFileLoader(videoCandidates);
-  if(!invitationVideoFilePromise){
-    invitationVideoFilePromise=loadInvitationVideoFile();
-  }
-  const recipientInput=window.prompt("Recipient name (optional)","");
-  if(recipientInput===null) return;
-  const recipientName=recipientInput.replace(/\s+/g," ").trim().slice(0,50);
-  const greeting=recipientName?`Dear ${recipientName},`:"Dear Family & Friends,";
-  const bouquet=String.fromCodePoint(0x1F490);
-  const inviteHeading=`${bouquet} Priti & Uma — Wedding Invitation ${bouquet}`;
-  const introLines=[
-    inviteHeading,
+function buildInvitationMessage(value){
+  const name=normalizeRecipientName(value);
+  return [
+    "\uD83D\uDC90 Priti & Uma \u2014 Wedding Invitation \uD83D\uDC90",
     "",
-    greeting,
+    name ? `Dear ${name},` : "Dear Friends and Family,",
     "",
     "25 November 2026",
     "",
     "With hearts full of love and joy, we are delighted to invite you to celebrate the wedding of Priti & Uma.",
-    "Your presence will make our special day even more memorable. ❤️"
-  ];
-  const shareMessage=[
-    ...introLines,
+    "Your presence will make our special day even more memorable. \u2764\uFE0F",
     "",
-    "✨ Tap to open the wedding invitation details",
-    inviteUrl
+    "Tap to open the wedding invitation details:",
+    "https://umapritiwedding.online/"
   ].join("\n");
-  const textShareData={
-    title:"Priti & Uma - Wedding Invitation",
-    text:shareMessage
-  };
+}
 
-  if(!navigator.share){
-    window.open("https://wa.me/?text="+encodeURIComponent(shareMessage),"_blank","noopener,noreferrer");
+const invitationShareDialog=document.createElement("dialog");
+invitationShareDialog.className="invitation-share-dialog";
+invitationShareDialog.setAttribute("aria-labelledby","invitationShareTitle");
+invitationShareDialog.innerHTML=`
+  <h2 id="invitationShareTitle">Share invitation</h2>
+  <form id="invitationShareForm">
+    <label for="invitationRecipient">Recipient name (optional)</label>
+    <input id="invitationRecipient" type="text" autocomplete="off" placeholder="Friends and Family" aria-describedby="invitationNameHint">
+    <small id="invitationNameHint">Up to 100 characters. Spaces between names are welcome.</small>
+    <p id="invitationShareStatus" role="status" aria-live="polite"></p>
+    <div class="invitation-share-actions">
+      <button type="button" id="cancelInvitationShare">Cancel</button>
+      <button type="button" id="retryInvitationVideo" hidden>Retry video</button>
+      <button type="submit" id="chooseInvitationApp" disabled>Choose app</button>
+    </div>
+  </form>`;
+document.body.appendChild(invitationShareDialog);
+const invitationRecipient=document.getElementById("invitationRecipient");
+const invitationShareStatus=document.getElementById("invitationShareStatus");
+const chooseInvitationApp=document.getElementById("chooseInvitationApp");
+const retryInvitationVideo=document.getElementById("retryInvitationVideo");
+let currentInvitationFile=null;
+let invitationFetchController=null;
+let invitationSharePending=false;
+
+async function prepareInvitationVideo(){
+  invitationFetchController?.abort();
+  const controller=new AbortController();
+  invitationFetchController=controller;
+  currentInvitationFile=null;
+  chooseInvitationApp.disabled=true;
+  retryInvitationVideo.hidden=true;
+  if(!navigator.share || !navigator.canShare){
+    invitationShareStatus.textContent="Video sharing is unavailable in this browser. Open the invitation in a browser with file sharing support, such as Chrome on Android or Safari on iPhone.";
     return;
   }
-
+  invitationShareStatus.textContent="Preparing invitation video...";
+  const timeout=setTimeout(()=>controller.abort(),60000);
   try{
-    // Call native share immediately while click gesture is still active.
-    await navigator.share(textShareData);
-    return;
-  }catch(err){
-    if(err && err.name==="AbortError") return;
-    window.open("https://wa.me/?text="+encodeURIComponent(shareMessage),"_blank","noopener,noreferrer");
+    const url=new URL("assets/invitation%20video.mp4",document.baseURI);
+    const response=await fetch(url,{cache:"no-store",signal:controller.signal});
+    if(!response.ok) throw new Error("Video download failed");
+    const blob=await response.blob();
+    if(!blob.size || (blob.type && !/^(video\/mp4|application\/octet-stream)(;|$)/i.test(blob.type))){
+      throw new Error("Invalid video response");
+    }
+    const file=new File([blob],"Priti-and-Uma-Wedding-Invitation.mp4",{type:"video/mp4"});
+    if(controller!==invitationFetchController || !invitationShareDialog.open) return;
+    if(!navigator.canShare({files:[file]})){
+      invitationShareStatus.textContent="This browser cannot share the invitation video. Please try Chrome on Android or Safari on iPhone.";
+      return;
+    }
+    currentInvitationFile=file;
+    invitationShareStatus.textContent="Your invitation video is ready.";
+    chooseInvitationApp.disabled=false;
+  }catch(error){
+    if(controller!==invitationFetchController || !invitationShareDialog.open) return;
+    invitationShareStatus.textContent="The invitation video could not load. Please retry.";
+    retryInvitationVideo.hidden=false;
+  }finally{
+    clearTimeout(timeout);
+  }
+}
+
+document.getElementById("whatsappShare")?.addEventListener("click",()=>{
+  if(invitationSharePending || invitationShareDialog.open) return;
+  invitationRecipient.value="";
+  invitationRecipient.setCustomValidity("");
+  invitationShareDialog.showModal();
+  prepareInvitationVideo();
+});
+invitationRecipient.addEventListener("input",()=>{
+  const length=Array.from(invitationRecipient.value.replace(/\s+/g," ").trim()).length;
+  invitationRecipient.setCustomValidity(length>100?"Please enter a name of up to 100 characters.":"");
+});
+document.getElementById("cancelInvitationShare").addEventListener("click",()=>invitationShareDialog.close());
+invitationShareDialog.addEventListener("close",()=>{
+  invitationFetchController?.abort();
+  invitationFetchController=null;
+  currentInvitationFile=null;
+  invitationRecipient.value="";
+});
+retryInvitationVideo.addEventListener("click",prepareInvitationVideo);
+document.getElementById("invitationShareForm").addEventListener("submit",async event=>{
+  event.preventDefault();
+  if(invitationSharePending || !currentInvitationFile) return;
+  invitationSharePending=true;
+  chooseInvitationApp.disabled=true;
+  try{
+    // Invoke directly from this tap: downloading here would lose user activation.
+    // Always attach the video with its caption; never silently send text alone.
+    await navigator.share({
+      files:[currentInvitationFile],
+      text:buildInvitationMessage(invitationRecipient.value)
+    });
+    invitationShareDialog.close();
+  }catch(error){
+    invitationShareStatus.textContent=error?.name==="AbortError"
+      ? "Sharing cancelled. Choose an app to try again."
+      : "Could not open sharing. Tap Choose app to try again.";
+  }finally{
+    invitationSharePending=false;
+    chooseInvitationApp.disabled=!currentInvitationFile;
   }
 });
-
-// Warm the invitation video once so the later share action opens faster.
-const warmShareVideo=()=>{
-  if(invitationVideoFilePromise) return;
-  const mediaBaseUrl=new URL("./",window.location.href).href;
-  const videoVersion="20260926v14";
-  const videoCandidates=[
-    mediaBaseUrl+"assets/invitation%20video.mp4?v="+videoVersion,
-    mediaBaseUrl+"assets/invitation video.mp4?v="+videoVersion
-  ];
-  const loadInvitationVideoFile=createInvitationVideoFileLoader(videoCandidates);
-  invitationVideoFilePromise=loadInvitationVideoFile();
-};
-window.addEventListener("load",()=>setTimeout(warmShareVideo,600));
-document.addEventListener("click",warmShareVideo,{once:true});
-document.addEventListener("touchstart",warmShareVideo,{once:true,passive:true});
 /* ============================================================
    ENGAGEMENT PHOTO SWAP GALLERY
    ============================================================ */
