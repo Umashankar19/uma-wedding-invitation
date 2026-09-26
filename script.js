@@ -869,10 +869,9 @@ document.getElementById("whatsappShare")?.addEventListener("click",async()=>{
   }
   const recipientInput=window.prompt("Recipient name (optional)","");
   if(recipientInput===null) return;
-  const recipientName=recipientInput.trim().slice(0,50);
+  const recipientName=recipientInput.replace(/\s+/g," ").trim().slice(0,50);
   const greeting=recipientName?`Dear ${recipientName},`:"Dear Family & Friends,";
-  const bouquet=String.fromCodePoint(0x1F490);
-  const inviteHeading=`${bouquet} Priti & Uma — Wedding Invitation ${bouquet}`;
+  const inviteHeading="💐 Priti & Uma — Wedding Invitation 💐";
   const introLines=[
     inviteHeading,
     "",
@@ -881,14 +880,9 @@ document.getElementById("whatsappShare")?.addEventListener("click",async()=>{
     "25 November 2026",
     "",
     "With hearts full of love and joy, we are delighted to invite you to celebrate the wedding of Priti & Uma.",
-    "Your presence will make our special day even more memorable. ❤"
+    "Your presence will make our special day even more memorable. ❤️"
   ];
-  const shareMessage=[
-    ...introLines,
-    "",
-    "Tap to open the wedding invitation details:",
-    inviteUrl
-  ].join("\n");
+  const shareMessage=introLines.join("\n");
   if(!navigator.share){
     window.open("https://wa.me/?text="+encodeURIComponent(shareMessage),"_blank","noopener,noreferrer");
     return;
@@ -913,8 +907,7 @@ document.getElementById("whatsappShare")?.addEventListener("click",async()=>{
 
     const textShareData={
       title:"Priti & Uma - Wedding Invitation",
-      text:shareMessage,
-      url:inviteUrl
+      text:shareMessage
     };
     if(!navigator.canShare || navigator.canShare(textShareData)){
       await navigator.share(textShareData);
@@ -926,8 +919,7 @@ document.getElementById("whatsappShare")?.addEventListener("click",async()=>{
     if(err && err.name==="AbortError") return;
     const textShareData={
       title:"Priti & Uma - Wedding Invitation",
-      text:shareMessage,
-      url:inviteUrl
+      text:shareMessage
     };
     try{
       if(!navigator.canShare || navigator.canShare(textShareData)){
