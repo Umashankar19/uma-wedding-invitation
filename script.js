@@ -871,7 +871,8 @@ document.getElementById("whatsappShare")?.addEventListener("click",async()=>{
   if(recipientInput===null) return;
   const recipientName=recipientInput.trim().slice(0,50);
   const greeting=recipientName?`Dear ${recipientName},`:"Dear Family & Friends,";
-  const inviteHeading="\uD83D\uDC90 Priti & Uma — Wedding Invitation \uD83D\uDC90";
+  const bouquet=String.fromCodePoint(0x1F490);
+  const inviteHeading=`${bouquet} Priti & Uma — Wedding Invitation ${bouquet}`;
   const introLines=[
     inviteHeading,
     "",
