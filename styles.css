@@ -118,7 +118,7 @@ main{overflow:hidden}.screen{min-height:100svh;position:relative;padding:58px 18
 .desk-scene{width:100%;min-height:88vh;display:grid;place-items:center;position:relative;background:radial-gradient(circle at 18% 14%,rgba(255,255,255,.18),transparent 24%),linear-gradient(135deg,#caa786,#8e644d);border-radius:20px;padding:28px 16px;box-shadow:inset 0 0 45px rgba(64,31,18,.25);overflow:hidden}
 .petal{position:absolute;color:#f0d3c0;font-size:28px;opacity:.75;z-index:1}.p1{left:18px;top:24px}.p2{right:20px;top:64px}.p3{left:28px;bottom:30px}
 .rich-letter{min-height:77vh;max-width:390px;padding:38px 30px 46px;transform:rotate(-1.2deg);background:linear-gradient(rgba(255,250,239,.92),rgba(248,232,210,.94));border-radius:4px 16px 8px 14px;box-shadow:0 24px 50px rgba(41,22,14,.32)}
-.letter-topline{display:flex;justify-content:space-between;align-items:center;color:#735443}.tiny-motif{font-size:20px;color:var(--maroon)}.letter-ornament{text-align:center;letter-spacing:2px;color:#8a694f;margin:18px 0}.rich-letter .letter-greeting{font-size:22px}.rich-letter .letter-body{font-size:15.5px;line-height:2.05}.rich-letter .lead-line{color:#6f3947}.rich-letter .invite-verse{padding-left:12px;border-left:2px solid rgba(146,43,74,.25)}.letter-separator{text-align:center;color:#a46c65;margin:18px 0;letter-spacing:5px}.rich-letter .letter-sign span{font-family:"Great Vibes";font-size:30px;color:var(--maroon)}.rich-letter .letter-sign em{font-style:normal;color:var(--maroon);padding:0 6px}.rich-letter .wax{width:66px;height:66px;font-size:16px}
+.letter-topline{display:flex;justify-content:space-between;align-items:center;color:#735443}.tiny-motif{font-size:20px;color:var(--maroon)}.letter-ornament{text-align:center;letter-spacing:2px;color:#8a694f;margin:18px 0}.rich-letter .letter-greeting{font-size:22px}.rich-letter .letter-body{font-size:15.5px;line-height:2.05}.rich-letter .lead-line{color:#6f3947}.rich-letter .invite-verse{padding-left:12px;border-left:2px solid rgba(146,43,74,.25)}.rich-letter .letter-sign span{font-family:"Great Vibes";font-size:30px;color:var(--maroon)}.rich-letter .letter-sign em{font-style:normal;color:var(--maroon);padding:0 6px}.rich-letter .wax{width:66px;height:66px;font-size:16px}
 .event-hint{text-align:center;font-size:11px;color:var(--maroon);margin:-12px 0 14px}.event-click{cursor:pointer;transition:.18s;position:relative}.event-click:after{content:"›";position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:24px;color:var(--maroon)}.event-click:hover,.event-click:focus{transform:translateY(-2px);box-shadow:0 10px 25px rgba(78,40,34,.12);outline:none}.event-click>div:last-child{padding-right:28px}
 .event-location-screen{background:linear-gradient(180deg,#fffaf1,#f7efe5)}.back-link{border:0;background:none;color:var(--maroon);padding:0;margin:0 0 20px;font-size:12px}.live-map-card{height:280px;margin:22px 0 12px;display:flex;flex-direction:column;gap:7px;align-items:center;justify-content:center;background:repeating-linear-gradient(25deg,#dfe7d8 0 12px,#f2ecdf 12px 24px);border:1px solid #ddd0c0}.map-pin{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:var(--maroon);color:white;font-size:28px}.live-map-card strong{font-family:"Cormorant Garamond";font-size:22px}.live-map-card span{font-size:11px;color:#6b625d}.location-note{text-align:center;font-size:11px;line-height:1.7;color:#77645e;margin:16px auto 0;max-width:340px}
 
@@ -283,6 +283,182 @@ body{background:#d2c3b0;overflow-x:hidden}
   .lightbox-photo{height:min(68svh,520px)}
 }
 
+
+/* ============================================================
+   CONTINUOUS PARCHMENT FLOW (APPROVED MOCKUP)
+   ============================================================ */
+
+#invitation.page-design{
+  padding-bottom:38px !important;
+}
+
+.story-flow{
+  position:relative;
+  background:#ead5b3;
+  margin-top:0;
+  padding-top:0;
+  overflow:hidden;
+}
+
+.story-flow::before,
+.story-flow::after{
+  content:"";
+  position:absolute;
+  top:0;
+  bottom:0;
+  width:56px;
+  pointer-events:none;
+  z-index:1;
+  background-image:url("assets/mithila side borders.png");
+  background-repeat:repeat-y;
+  background-size:520px auto;
+}
+
+.story-flow::before{left:0;background-position:left top}
+.story-flow::after{right:0;background-position:right top}
+
+.story-flow > .screen.page-design{
+  background:transparent !important;
+  border-bottom:0 !important;
+  box-shadow:none !important;
+  min-height:auto !important;
+  height:auto !important;
+  padding-top:24px !important;
+  padding-bottom:24px !important;
+}
+
+.story-flow > .screen.page-design::before,
+.story-flow > .screen.page-design::after,
+.story-flow > .screen.page-design > .page-art{
+  display:none !important;
+}
+
+.story-flow > .screen.page-design > .section-inner,
+.story-flow > .screen.page-design > .desk-scene,
+.story-flow > .screen.page-design > .hero-card{
+  position:relative;
+  z-index:2;
+}
+
+/* One-line breathing space between page 2 end and page 3 heading. */
+.story-flow > #beginning.page-design{
+  padding-top:14px !important;
+}
+
+#beginning .chapter-heading{
+  margin-top:12px !important;
+}
+
+@media (max-width:699px){
+  .story-flow > #beginning.page-design{
+    padding-top:12px !important;
+  }
+
+  #beginning .chapter-heading{
+    margin-top:10px !important;
+  }
+}
+
+/* Page 3 is shorter than later sections; avoid motif shrink by preventing stretch. */
+#beginning.page-design > .page-art{
+  object-fit:cover !important;
+  object-position:center top !important;
+}
+
+/* ============================================================
+   FINAL STACK FLOW: PAGE3 -> PAGE4 CONTINUOUS CONTENT
+   ============================================================ */
+
+.story-flow > .screen.page-design{
+  display:block !important;
+  min-height:auto !important;
+  height:auto !important;
+  align-items:stretch !important;
+  justify-content:flex-start !important;
+  margin:0 !important;
+  padding-top:8px !important;
+  padding-bottom:8px !important;
+}
+
+.story-flow > #beginning.page-design,
+.story-flow > #moments.page-design,
+.story-flow > #events.page-design,
+.story-flow > #countdown.page-design{
+  min-height:auto !important;
+  margin-top:0 !important;
+  margin-bottom:0 !important;
+}
+
+.story-flow > #beginning.page-design > .section-inner{
+  margin-top:0 !important;
+  margin-bottom:0 !important;
+}
+
+.story-flow > #moments.page-design > .section-inner,
+.story-flow > #events.page-design > .section-inner,
+.story-flow > #countdown.page-design > .section-inner{
+  margin-top:0 !important;
+  margin-bottom:0 !important;
+}
+
+#beginning .chapter-heading{margin-top:0 !important;margin-bottom:10px !important}
+#beginning .poem{margin:0 auto 8px !important}
+#beginning .chapter-closing{margin:8px 0 0 !important}
+
+@media (max-width:699px){
+  .story-flow > .screen.page-design{
+    padding-top:6px !important;
+    padding-bottom:6px !important;
+  }
+
+  #beginning .chapter-heading{margin-bottom:8px !important}
+  #beginning .poem{margin:0 auto 6px !important}
+  #beginning .chapter-closing{margin-top:6px !important}
+}
+
+.story-flow #beginning.page-design{
+  margin-top:0 !important;
+  padding-top:10px !important;
+}
+
+.story-flow #beginning.page-design > .section-inner{
+  opacity:0;
+  transform:translateY(12px);
+  transition:opacity .7s ease, transform .7s ease;
+}
+
+.story-flow #beginning.page-design.is-visible > .section-inner{
+  opacity:1;
+  transform:translateY(0);
+}
+
+.story-flow #moments.page-design,
+.story-flow #events.page-design,
+.story-flow #countdown.page-design{
+  margin-top:0 !important;
+}
+
+@media (max-width:699px){
+  .story-flow::before,
+  .story-flow::after{
+    width:48px;
+    background-size:440px auto;
+  }
+
+  #invitation.page-design{padding-bottom:34px !important}
+
+  .story-flow > .screen.page-design{padding-top:20px !important;padding-bottom:20px !important}
+  .story-flow #beginning.page-design{padding-top:8px !important}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .story-flow #beginning.page-design > .section-inner,
+  .story-flow #beginning.page-design.is-visible > .section-inner{
+    transition:none !important;
+    transform:none !important;
+    opacity:1 !important;
+  }
+}
 @media(max-width:380px){
   .screen.page-design>.section-inner,.screen.page-design>.desk-scene,.screen.page-design>.hero-card{width:84%}
   #moments.page-design>.section-inner{width:90%}
@@ -350,7 +526,6 @@ body{background:#d2c3b0;overflow-x:hidden}
 #invitation .letter-greeting{margin-top:7px;margin-bottom:3px}
 #invitation .letter-body{font-size:13.5px;line-height:1.28}
 #invitation .letter-body p{margin-top:4px;margin-bottom:4px}
-#invitation .letter-separator{margin-top:8px;margin-bottom:6px}
 #invitation .letter-sign{margin-top:8px;line-height:1.12}
 
 #beginning .poem{font-size:14px;line-height:1.2}
@@ -722,12 +897,6 @@ body{background:#d2c3b0;overflow-x:hidden}
     margin-bottom: 9px;
 }
 
-#invitation .letter-separator {
-
-    margin-top: 11px;
-    margin-bottom: 9px;
-}
-
 #invitation .letter-sign {
 
     line-height: 1.45;
@@ -958,7 +1127,6 @@ footer {
   #invitation .letter-greeting{font-size:29px;margin-top:16px}
   #invitation .letter-body{font-size:18px;line-height:1.7}
   #invitation .letter-body p{margin-top:10px;margin-bottom:10px}
-  #invitation .letter-separator{margin-top:16px;margin-bottom:12px}
   #invitation .letter-sign{font-size:19px;line-height:1.35}
 
   #beginning .script-title{font-size:45px;line-height:1.1}
@@ -1047,7 +1215,6 @@ footer {
 #invitation.page-design.is-visible .paper-date,
 #invitation.page-design.is-visible .letter-greeting,
 #invitation.page-design.is-visible .letter-body p,
-#invitation.page-design.is-visible .letter-separator,
 #invitation.page-design.is-visible .letter-sign{
   animation:handwrittenReveal .72s cubic-bezier(.2,.75,.25,1) both;
 }
@@ -1059,7 +1226,6 @@ footer {
 #invitation.page-design.is-visible .letter-body p:nth-child(2){animation-delay:670ms}
 #invitation.page-design.is-visible .letter-body p:nth-child(3){animation-delay:800ms}
 #invitation.page-design.is-visible .letter-body p:nth-child(4){animation-delay:930ms}
-#invitation.page-design.is-visible .letter-separator{animation-delay:1060ms}
 #invitation.page-design.is-visible .letter-sign{animation-delay:1190ms}
 
 @keyframes handwrittenReveal{
@@ -1072,7 +1238,6 @@ footer {
   #invitation.page-design.is-visible .paper-date,
   #invitation.page-design.is-visible .letter-greeting,
   #invitation.page-design.is-visible .letter-body p,
-  #invitation.page-design.is-visible .letter-separator,
   #invitation.page-design.is-visible .letter-sign{
     animation:none;
     opacity:1;
@@ -1268,6 +1433,7 @@ footer {
 }
 #countdown .closing-thanks .devanagari{font-size:15px;margin-top:10px}
 #countdown .closing-actions{
+  --closing-button-size:48px;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -1281,9 +1447,9 @@ footer {
 }
 #countdown .phone-button,
 #countdown .whatsapp-button{
-  width:46px;
-  height:46px;
-  flex:0 0 46px;
+  width:var(--closing-button-size);
+  height:var(--closing-button-size);
+  flex:0 0 var(--closing-button-size);
   padding:0;
   border-radius:50%;
   display:grid;
@@ -1294,6 +1460,11 @@ footer {
 #countdown .phone-button{background:var(--maroon)}
 #countdown .whatsapp-button{background:#25D366;border-color:#25D366}
 #countdown .closing-actions .primary{margin:0}
+#countdown .closing-actions > .primary{
+  height:var(--closing-button-size);
+  padding:0 14px;
+  line-height:1.2;
+}
 #countdown .closing-actions .share-icon{
   border:1px solid rgba(184,139,80,.65);
 }
@@ -1373,6 +1544,197 @@ footer {
   from{opacity:0;transform:translateY(14px) scale(.98)}
   to{opacity:1;transform:translateY(0) scale(1)}
 }
+
+/* ============================================================
+   HOTFIX: PAGE-2 SAFE-ZONE + PAGE-2/3 SEAM ALIGNMENT
+   ============================================================ */
+
+#invitation.page-design{
+  background:#ead5b3 !important;
+  padding-bottom:0 !important;
+  min-height:auto !important;
+  height:auto !important;
+  align-items:flex-start !important;
+  --invitation-frame-gutter: clamp(68px, 16vw, 100px);
+}
+
+#invitation.page-design > .page-art{
+  /* Show the intact frame's top 1400 of 1536 pixels, excluding its bottom band.
+     The section clips the excess while keeping both side borders continuous. */
+  height:calc(100% * 1536 / 1400);
+  object-fit:fill;
+  object-position:center top !important;
+}
+
+#invitation.page-design > .desk-scene{
+  width:auto !important;
+  max-width:min(348px, calc(100% - (var(--invitation-frame-gutter) * 2))) !important;
+  padding:6px 6px 12px !important;
+  min-height:auto !important;
+  height:auto !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+}
+
+#invitation.page-design .rich-letter{
+  width:100% !important;
+  max-width:100% !important;
+  padding:12px 18px 8px !important;
+  min-height:0 !important;
+  height:auto !important;
+  transform:none !important;
+}
+
+#invitation .letter-topline{
+  justify-content:space-between !important;
+}
+
+#invitation .tiny-motif{
+  display:inline-block !important;
+}
+
+#invitation .paper-date{
+  text-align:right !important;
+}
+
+#invitation .letter-ornament,
+#invitation .letter-sign{
+  text-align:center !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+}
+
+#invitation .letter-sign{margin-bottom:0 !important}
+
+#invitation .letter-greeting,
+#invitation .letter-body{
+  width:100%;
+  max-width:none;
+  margin-left:auto !important;
+  margin-right:auto !important;
+}
+
+#invitation .letter-greeting{
+  margin-top:8px !important;
+}
+
+#invitation .letter-greeting{
+  text-align:left;
+}
+
+#invitation .letter-body{
+  text-align:left;
+}
+
+#invitation .letter-body p{
+  text-align:left;
+}
+
+#invitation .letter-body .invite-verse{
+  border-left:2px solid rgba(146,43,74,.25) !important;
+  padding-left:8px !important;
+}
+
+#invitation .letter-body{
+  line-height:1.58 !important;
+  font-size:15.6px;
+  letter-spacing:.08px;
+}
+
+.story-flow{
+  margin-top:-1px !important;
+  background:#ead5b3 !important;
+}
+
+/* Match page-2 side edge thickness with explicit left/right border strips. */
+.story-flow::before,
+.story-flow::after{
+  content:"";
+  position:absolute;
+  top:0;
+  bottom:0;
+  width:52px;
+  pointer-events:none;
+  z-index:1;
+  background-image:url("assets/mithila side borders.png");
+  background-repeat:repeat-y;
+  background-size:520px auto;
+}
+
+.story-flow::before{left:0;background-position:left top}
+.story-flow::after{right:0;background-position:right top}
+
+.story-flow > .screen.page-design{
+  padding-top:10px !important;
+  padding-bottom:20px !important;
+}
+
+.story-flow #beginning.page-design{
+  padding-top:0 !important;
+}
+
+.story-flow #beginning.page-design .script-title{
+  margin-top:0 !important;
+}
+
+#beginning .chapter-heading{
+  font-size:31px;
+  line-height:1.16;
+  font-weight:700;
+  max-width:92%;
+  margin-left:auto;
+  margin-right:auto;
+  margin-bottom:14px;
+}
+
+#beginning .poem{
+  max-width:340px;
+  margin:0 auto;
+  font-size:17px;
+  line-height:1.7;
+}
+
+#beginning .chapter-closing{
+  margin:14px 0 0;
+  font-size:28px;
+  color:var(--maroon);
+  font-family:"Great Vibes","Cormorant Garamond",cursive;
+  font-weight:700;
+  text-align:right;
+  width:100%;
+}
+
+@media (max-width:699px){
+  #invitation.page-design{--invitation-frame-gutter: clamp(64px, 16vw, 96px)}
+
+  #invitation.page-design > .desk-scene{
+    max-width:min(346px, calc(100% - (var(--invitation-frame-gutter) * 2))) !important;
+    padding-top:4px !important;
+    padding-left:4px !important;
+    padding-right:4px !important;
+  }
+
+  #invitation.page-design .rich-letter{
+    padding:10px 14px 22px !important;
+    transform:none !important;
+  }
+
+  #invitation .letter-body{font-size:15.1px;line-height:1.55 !important}
+
+  #beginning .chapter-heading{font-size:26px;line-height:1.18;font-weight:700;max-width:94%}
+  #beginning .poem{font-size:15.5px;line-height:1.62;max-width:286px}
+  #beginning .chapter-closing{font-size:24px;margin-top:10px}
+
+  .story-flow > .screen.page-design{
+    padding-top:8px !important;
+  }
+
+  .story-flow::before,
+  .story-flow::after{
+    width:44px;
+    background-size:440px auto;
+  }
+}
 @media(prefers-reduced-motion:reduce){
   .screen.final.page-design.is-visible .final-overlay,
   .screen.final.page-design.is-visible > .final-content > *{
@@ -1445,8 +1807,13 @@ footer {
   box-sizing:border-box;
 }
 
-/* Page 7 now also uses side-border artwork directly. */
+/* The closing page uses the lower-border artwork. */
 #countdown.page-design > .page-art{clip-path:none}
+
+/* Leave room for the painted bottom band below the closing buttons. */
+.story-flow > #countdown.screen.page-design{
+  padding-bottom:96px !important;
+}
 
 /* Reuse removed border space for content instead of leaving empty strips. */
 #beginning.page-design{padding-top:62px !important;padding-bottom:22px !important}
@@ -1486,4 +1853,267 @@ footer {
   #countdown.page-design{margin-top:-3px}
 
   #moments.page-design{margin-top:-15px !important}
+}
+
+/* ============================================================
+   FINAL OVERRIDE: MATCH PAGE-2 BORDER SCALE ON PAGE-3+
+   ============================================================ */
+
+.story-flow{
+  --flow-border-strip:52px;
+  --flow-content-gap:12px;
+}
+
+.story-flow::before,
+.story-flow::after{
+  width:var(--flow-border-strip) !important;
+  background-size:520px auto !important;
+}
+
+/* Force one continuous bordered parchment area from page 3 onward. */
+.story-flow > .screen.page-design{
+  margin-top:0 !important;
+  padding-top:14px !important;
+  padding-bottom:22px !important;
+  min-height:0 !important;
+  height:auto !important;
+  border-bottom:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+
+.story-flow > #beginning.page-design{
+  padding-top:6px !important;
+}
+
+/* Never let section content enter border lanes. */
+.story-flow > .screen.page-design > .section-inner,
+.story-flow > .screen.page-design > .desk-scene,
+.story-flow > .screen.page-design > .hero-card{
+  width:min(620px, calc(100% - ((var(--flow-border-strip) + var(--flow-content-gap)) * 2))) !important;
+  max-width:calc(100% - ((var(--flow-border-strip) + var(--flow-content-gap)) * 2)) !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+  box-sizing:border-box;
+}
+
+/* Beginning copy remains intentionally narrower than gallery/events sections. */
+.story-flow > #beginning.page-design > .section-inner{
+  width:min(460px, calc(100% - ((var(--flow-border-strip) + var(--flow-content-gap)) * 2))) !important;
+}
+
+@media (max-width:699px){
+  .story-flow{
+    --flow-border-strip:52px;
+    --flow-content-gap:10px;
+  }
+
+  .story-flow::before,
+  .story-flow::after{
+    width:var(--flow-border-strip) !important;
+    background-size:520px auto !important;
+  }
+
+  .story-flow > .screen.page-design{
+    padding-top:10px !important;
+    padding-bottom:18px !important;
+  }
+
+  .story-flow > .screen.page-design > .section-inner,
+  .story-flow > .screen.page-design > .desk-scene,
+  .story-flow > .screen.page-design > .hero-card{
+    width:min(360px, calc(100% - ((var(--flow-border-strip) + var(--flow-content-gap)) * 2))) !important;
+  }
+
+  .story-flow > #beginning.page-design > .section-inner{
+    width:min(332px, calc(100% - ((var(--flow-border-strip) + var(--flow-content-gap)) * 2))) !important;
+  }
+}
+
+/* ============================================================
+   FINAL LOCK: PAGE-3+ SIDE BORDER CONTINUITY
+   ============================================================ */
+
+.story-flow{
+  --flow-content-gap:10px;
+  position:relative;
+  overflow:hidden;
+  background:#ead5b3 !important;
+  margin-top:0 !important;
+}
+
+.story-flow > .screen.page-design{
+  position:relative;
+  z-index:2;
+  margin:0 !important;
+  padding-top:0 !important;
+  padding-bottom:12px !important;
+  border-bottom:0 !important;
+  min-height:auto !important;
+  height:auto !important;
+  display:block !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+
+.story-flow > #beginning.page-design{padding-top:0 !important}
+
+.story-flow > .screen.page-design > .section-inner,
+.story-flow > .screen.page-design > .desk-scene,
+.story-flow > .screen.page-design > .hero-card{
+  width:min(620px, calc(100% - ((var(--flow-border-strip) + var(--flow-content-gap)) * 2))) !important;
+  max-width:calc(100% - ((var(--flow-border-strip) + var(--flow-content-gap)) * 2)) !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  box-sizing:border-box;
+}
+
+.story-flow > #beginning.page-design > .section-inner{
+  width:min(460px, calc(100% - ((var(--flow-border-strip) + var(--flow-content-gap)) * 2))) !important;
+}
+
+@media (max-width:699px){
+  .story-flow{margin-top:0 !important}
+
+  .story-flow > .screen.page-design{padding-top:0 !important;padding-bottom:10px !important}
+
+  .story-flow > .screen.page-design > .section-inner,
+  .story-flow > .screen.page-design > .desk-scene,
+  .story-flow > .screen.page-design > .hero-card{
+    width:min(360px, calc(100% - ((var(--flow-border-strip) + var(--flow-content-gap)) * 2))) !important;
+  }
+
+  .story-flow > #beginning.page-design > .section-inner{
+    width:min(332px, calc(100% - ((var(--flow-border-strip) + var(--flow-content-gap)) * 2))) !important;
+  }
+}
+
+/* ============================================================
+   PATCH: RESTORE VISIBLE PAGE-3+ SIDE BORDERS
+   ============================================================ */
+
+/* Disable container-painted strips and render side-border artwork per section. */
+.story-flow::before,
+.story-flow::after{
+  display:none !important;
+}
+
+.story-flow > .screen.page-design{
+  position:relative;
+  background:#ead5b3 !important;
+}
+
+.story-flow > .screen.page-design > .page-art{
+  display:block !important;
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:fill;
+  object-position:center top;
+  z-index:1;
+}
+
+.story-flow > .screen.page-design > .section-inner,
+.story-flow > .screen.page-design > .desk-scene,
+.story-flow > .screen.page-design > .hero-card{
+  position:relative;
+  z-index:2;
+}
+
+#invitation .invitation-lotus{
+  display:block;
+  width:120px;
+  max-width:100%;
+  height:auto;
+  margin:14px auto 0;
+  opacity:.95;
+}
+
+/* Keep only a small one-line separation before page-3 heading. */
+#beginning .chapter-heading{
+  margin-top:0 !important;
+}
+
+@media (max-width:699px){
+  #beginning .chapter-heading{margin-top:0 !important}
+
+  #invitation .invitation-lotus{
+    width:clamp(84px, 24vw, 100px);
+    margin:12px auto 0;
+  }
+}
+
+#invitation .letter-sign .letter-family-line{
+  display:inline-block;
+  white-space:nowrap;
+  font-size:clamp(15px,3.8vw,19px);
+}
+
+
+
+/* Keep border color intensity consistent through page-2 -> page-3 -> page-4. */
+#invitation.page-design > .page-art,
+#beginning.page-design > .page-art,
+#moments.page-design > .page-art{
+  opacity:1 !important;
+  filter:saturate(1.08) contrast(1.04);
+}
+
+/* Page 2 should use only its top Mithila artwork (no injected side strips). */
+#invitation.page-design::before,
+#invitation.page-design::after,
+#invitation.page-design > .desk-scene::after{
+  content:none !important;
+  display:none !important;
+  background:none !important;
+}
+
+
+/* Keep only a tiny seam overlap between page-2 and page-3. */
+#beginning.page-design{margin-top:-1px !important}
+
+/* Floral texture on page-4 was muting the border artwork at transitions. */
+.story-flow > #moments.floral-screen::before{
+  display:none !important;
+}
+
+@media (max-width:699px){
+  #beginning.page-design{margin-top:-1px !important}
+}
+
+/* ============================================================
+   FINAL SAFETY: PAGE-4+ CONTENT INSIDE BORDERS
+   ============================================================ */
+
+.story-flow{
+  --flow-border-strip:52px;
+  --flow-content-gap:18px;
+}
+
+.story-flow > #moments.page-design > .section-inner,
+.story-flow > #events.page-design > .section-inner,
+.story-flow > #countdown.page-design > .section-inner{
+  width:min(540px, calc(100% - ((var(--flow-border-strip) + var(--flow-content-gap)) * 2))) !important;
+  max-width:calc(100% - ((var(--flow-border-strip) + var(--flow-content-gap)) * 2)) !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:4px !important;
+  padding-right:4px !important;
+  box-sizing:border-box;
+}
+
+@media (max-width:699px){
+  .story-flow{
+    --flow-border-strip:52px;
+    --flow-content-gap:16px;
+  }
+
+  .story-flow > #moments.page-design > .section-inner,
+  .story-flow > #events.page-design > .section-inner,
+  .story-flow > #countdown.page-design > .section-inner{
+    width:min(324px, calc(100% - ((var(--flow-border-strip) + var(--flow-content-gap)) * 2))) !important;
+  }
 }

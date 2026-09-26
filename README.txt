@@ -20,7 +20,10 @@ UPDATED BUILD
 -------------
 This build uses:
 - assets/couple-faceless.jpg for the first-page couple illustration.
-- assets/mithila-border.png for the consistent Mithila frame on every page.
+- assets/mithila-border_1.jpg for the welcome and invitation frames.
+- assets/mithila side borders.png for the middle sections.
+- assets/mithila lower border.png for the closing section.
+- assets/mithila-lotus-ornament.svg for the invitation divider.
 
 To replace the couple illustration later, overwrite:
   assets/couple-faceless.jpg

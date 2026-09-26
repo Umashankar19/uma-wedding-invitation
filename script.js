@@ -23,6 +23,7 @@ window.addEventListener("pageshow", openAtWelcome);
 
 // Keep visitors on the welcome screen until they tap the invite button.
 let introUnlocked = false;
+let invitationLandingScrollY = null;
 
 function preventLockedScroll(event) {
   if (!introUnlocked) {
@@ -65,6 +66,10 @@ function openInvitationFromLetter() {
   window.setTimeout(function () {
     document.getElementById("invitation")?.scrollIntoView({ behavior: "smooth" });
   }, 360);
+
+  window.setTimeout(function () {
+    invitationLandingScrollY = window.scrollY;
+  }, 1050);
 }
 
 inviteLetterTrigger?.addEventListener("click", openInvitationFromLetter);

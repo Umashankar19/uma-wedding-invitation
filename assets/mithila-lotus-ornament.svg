@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 64" role="img" aria-labelledby="title desc">
+  <title id="title">Mithila Lotus Ornament</title>
+  <desc id="desc">A small centered lotus divider in maroon and muted gold tones.</desc>
+  <g fill="none" stroke="#8e3951" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14 33h28" stroke="#b68a4c" stroke-width="3"/>
+    <path d="M138 33h28" stroke="#b68a4c" stroke-width="3"/>
+    <path d="M36 33c9-1 16-4 22-9" stroke-width="2.6"/>
+    <path d="M144 33c-9-1-16-4-22-9" stroke-width="2.6"/>
+    <path d="M36 33c9 1 16 4 22 9" stroke-width="2.6"/>
+    <path d="M144 33c-9 1-16 4-22 9" stroke-width="2.6"/>
+  </g>
+
+  <g transform="translate(90 33)">
+    <ellipse cx="0" cy="8" rx="30" ry="7" fill="#b68a4c" fill-opacity="0.2"/>
+    <path d="M-42 0c6 0 10-2 14-7" fill="none" stroke="#8e3951" stroke-width="2.6" stroke-linecap="round"/>
+    <path d="M42 0c-6 0-10-2-14-7" fill="none" stroke="#8e3951" stroke-width="2.6" stroke-linecap="round"/>
+
+    <path d="M0-28c11 8 12 18 0 26c-12-8-11-18 0-26z" fill="#8e3951" stroke="#7a3146" stroke-width="1.5"/>
+    <path d="M-18-20c10 6 13 14 7 22c-12-1-18-9-20-18c5-2 9-3 13-4z" fill="#a64b4e" stroke="#7a3146" stroke-width="1.2"/>
+    <path d="M18-20c-10 6-13 14-7 22c12-1 18-9 20-18c-5-2-9-3-13-4z" fill="#a64b4e" stroke="#7a3146" stroke-width="1.2"/>
+    <path d="M-30-8c10 5 14 10 14 16c-11 1-20-4-26-12c4-2 7-3 12-4z" fill="#c59a5d" stroke="#8f6c3f" stroke-width="1.1"/>
+    <path d="M30-8c-10 5-14 10-14 16c11 1 20-4 26-12c-4-2-7-3-12-4z" fill="#c59a5d" stroke="#8f6c3f" stroke-width="1.1"/>
+    <path d="M0-16v18" stroke="#d7b276" stroke-width="1.8"/>
+  </g>
+</svg>

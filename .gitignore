@@ -16,3 +16,9 @@ assets/_backup_before_opt_20260921/
 /new audio.mpeg
 /new audio v2.mpeg
 *.ics
+
+# Local browser verification artifacts
+/.browser-*/
+/.local-browser-check.py
+/localhost-*.png
+/Microsoft/
