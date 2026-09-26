@@ -141,6 +141,8 @@ function startSource(){
   sourceNode=ctx.createBufferSource();
   sourceNode.buffer=audioBuffer;
   sourceNode.loop=true;
+  sourceNode.loopStart=0;
+  sourceNode.loopEnd=audioBuffer.duration;
   sourceNode.connect(ctx.destination);
   sourceNode.start(0);
 }
@@ -204,6 +206,14 @@ const tryStartFromInteraction=(event)=>{
 };
 document.addEventListener("click",tryStartFromInteraction);
 document.addEventListener("touchend",tryStartFromInteraction);
+
+function stopMusicWhenPageIsHidden(){
+  if(document.visibilityState==="hidden"){
+    stopPlaying();
+  }
+}
+document.addEventListener("visibilitychange",stopMusicWhenPageIsHidden);
+window.addEventListener("pagehide",stopPlaying);
 
 // Invite the visitor to tap for music since autoplay usually can't start on
 // its own; the bubble hides itself once music actually starts or after a bit.
@@ -791,66 +801,155 @@ if (gallery && galleryItems.length) {
 // document.getElementById("rsvpForm").addEventListener("submit",e=>{e.preventDefault();const data={attendance:e.target.attendance.value,guests,food:e.target.querySelector("select").value,at:Date.now()};localStorage.setItem(RSVP_KEY,JSON.stringify(data));document.getElementById("formMessage").textContent="Thank you! Your RSVP has been saved on this device. ♥"});
 
 // ===== Native share first, WhatsApp fallback =====
+function getRecipientNameFromUrl(){
+  const params=new URLSearchParams(window.location.search);
+  const raw=
+    params.get("recipient") ||
+    params.get("to") ||
+    params.get("name") ||
+    "";
+  return raw.trim().slice(0,50);
+}
+
+let invitationVideoFilePromise=null;
+
+function createInvitationVideoFileLoader(videoCandidates){
+  return async function loadInvitationVideoFile(){
+    for(const candidateUrl of videoCandidates){
+      try{
+        const res=await fetch(candidateUrl,{cache:"force-cache"});
+        if(!res.ok) continue;
+        const blob=await res.blob();
+        return new File([blob],"invitation-video.mp4",{type:blob.type||"video/mp4"});
+      }catch(_err){
+        // Try the next candidate.
+      }
+    }
+    return null;
+  };
+}
+
+function withTimeout(promise, timeoutMs){
+  return new Promise(resolve=>{
+    let settled=false;
+    promise.then(value=>{
+      if(settled) return;
+      settled=true;
+      resolve(value);
+    }).catch(()=>{
+      if(settled) return;
+      settled=true;
+      resolve(null);
+    });
+    setTimeout(()=>{
+      if(settled) return;
+      settled=true;
+      resolve(null);
+    },timeoutMs);
+  });
+}
+
 document.getElementById("whatsappShare")?.addEventListener("click",async()=>{
   const baseSiteUrl="https://umapritiwedding.online/";
   const inviteUrl=baseSiteUrl;
-  const videoUrl=baseSiteUrl+"assets/invitation-video.mp4";
+  const mediaBaseUrl=new URL("./",window.location.href).href;
+  const videoVersion="20260926v14";
+  const videoCandidates=[
+    mediaBaseUrl+"assets/invitation-video.mp4?v="+videoVersion,
+    mediaBaseUrl+"assets/invitation%20video.mp4?v="+videoVersion
+  ];
+  const loadInvitationVideoFile=createInvitationVideoFileLoader(videoCandidates);
+  if(!invitationVideoFilePromise){
+    invitationVideoFilePromise=loadInvitationVideoFile();
+  }
+  const recipientInput=window.prompt("Recipient name (optional)","");
+  if(recipientInput===null) return;
+  const recipientName=recipientInput.trim().slice(0,50);
+  const greeting=recipientName?`Dear ${recipientName},`:"Dear Family & Friends,";
+  const inviteHeading="\uD83D\uDC90 Priti & Uma — Wedding Invitation \uD83D\uDC90";
   const introLines=[
-    "\uD83D\uDC90 Priti & Uma \u2014 Wedding Invitation \uD83D\uDC90",
+    inviteHeading,
+    "",
+    greeting,
     "",
     "25 November 2026",
     "",
     "With hearts full of love and joy, we are delighted to invite you to celebrate the wedding of Priti & Uma.",
-    "Your presence will make our special day even more memorable. \u2764\uFE0F"
+    "Your presence will make our special day even more memorable. ❤"
   ];
-  const nativeText=[
+  const shareMessage=[
     ...introLines,
     "",
-    "\u2728 Tap to open the wedding invitation details"
+    "Tap to open the wedding invitation details:",
+    inviteUrl
   ].join("\n");
-  const whatsappText=[
-    ...introLines,
-    "",
-    "\u2728 Click the link below to view the wedding invitation and all the details:",
-    "\uD83D\uDD17 "+inviteUrl,
-    "",
-    "\uD83C\uDFA5 Invitation video:",
-    videoUrl
-  ].join("\n");
-  const openWhatsApp=()=>{
-    window.open("https://wa.me/?text="+encodeURIComponent(whatsappText),"_blank","noopener,noreferrer");
-  };
-
-  if(navigator.share){
-    try{
-      const shareData={
-        title:"Priti & Uma — Wedding Invitation",
-        text:nativeText,
-        url:inviteUrl
-      };
-      try{
-        const res=await fetch(videoUrl,{cache:"no-store"});
-        if(res.ok){
-          const blob=await res.blob();
-          const videoFile=new File([blob],"invitation-video.mp4",{type:blob.type||"video/mp4"});
-          if(!navigator.canShare||navigator.canShare({files:[videoFile]})){
-            shareData.files=[videoFile];
-          }
-        }
-      }catch(_videoErr){
-        // Ignore video-attachment errors and continue with text/url share.
-      }
-      if(!navigator.canShare || navigator.canShare(shareData)){
-        await navigator.share(shareData);
-        return;
-      }
-    }catch(err){
-      if(err && err.name==="AbortError") return;
-    }
+  if(!navigator.share){
+    window.open("https://wa.me/?text="+encodeURIComponent(shareMessage),"_blank","noopener,noreferrer");
+    return;
   }
 
-  openWhatsApp();
+  try{
+    // Keep share responsive: wait briefly for preloaded video, then fall back.
+    let videoFile=await withTimeout(invitationVideoFilePromise,1800);
+    if(!videoFile){
+      videoFile=await loadInvitationVideoFile();
+      if(videoFile) invitationVideoFilePromise=Promise.resolve(videoFile);
+    }
+
+    if(videoFile && (!navigator.canShare || navigator.canShare({files:[videoFile]}))){
+      await navigator.share({
+        title:"Priti & Uma - Wedding Invitation",
+        text:shareMessage,
+        files:[videoFile]
+      });
+      return;
+    }
+
+    const textShareData={
+      title:"Priti & Uma - Wedding Invitation",
+      text:shareMessage,
+      url:inviteUrl
+    };
+    if(!navigator.canShare || navigator.canShare(textShareData)){
+      await navigator.share(textShareData);
+      return;
+    }
+
+    window.open("https://wa.me/?text="+encodeURIComponent(shareMessage),"_blank","noopener,noreferrer");
+  }catch(err){
+    if(err && err.name==="AbortError") return;
+    const textShareData={
+      title:"Priti & Uma - Wedding Invitation",
+      text:shareMessage,
+      url:inviteUrl
+    };
+    try{
+      if(!navigator.canShare || navigator.canShare(textShareData)){
+        await navigator.share(textShareData);
+        return;
+      }
+    }catch(_fallbackErr){
+      // Ignore and fall through to WhatsApp URL fallback.
+    }
+    window.open("https://wa.me/?text="+encodeURIComponent(shareMessage),"_blank","noopener,noreferrer");
+  }
 });
+
+// Warm the invitation video once so the later share action opens faster.
+const warmShareVideo=()=>{
+  if(invitationVideoFilePromise) return;
+  const mediaBaseUrl=new URL("./",window.location.href).href;
+  const videoVersion="20260926v14";
+  const videoCandidates=[
+    mediaBaseUrl+"assets/invitation-video.mp4?v="+videoVersion,
+    mediaBaseUrl+"assets/invitation%20video.mp4?v="+videoVersion
+  ];
+  const loadInvitationVideoFile=createInvitationVideoFileLoader(videoCandidates);
+  invitationVideoFilePromise=loadInvitationVideoFile();
+};
+window.addEventListener("load",()=>setTimeout(warmShareVideo,600));
+document.addEventListener("click",warmShareVideo,{once:true});
+document.addEventListener("touchstart",warmShareVideo,{once:true,passive:true});
 /* ============================================================
    ENGAGEMENT PHOTO SWAP GALLERY
    ============================================================ */
