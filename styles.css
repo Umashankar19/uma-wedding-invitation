@@ -1324,8 +1324,8 @@ footer {
 .photo-card img{
   transform:scale(1);
   transform-origin:center center;
-  animation:photoCinematic 6.5s ease-in-out 0s 1 forwards;
-  will-change:transform;
+  animation:none;
+  will-change:auto;
 }
 @keyframes photoCinematic{
   from{transform:scale(1)}
@@ -1345,7 +1345,7 @@ footer {
 .screen.is-visible .tiny-motif,
 .location-modal.open .mithila-mini-art span{
   animation:decorativeDrift 8s ease-in-out 1 both;
-  will-change:transform;
+  will-change:auto;
 }
 .screen.is-visible .p2{animation-delay:.35s}
 .screen.is-visible .p3{animation-delay:.7s}
@@ -2208,3 +2208,13 @@ html.intro-locked, html.intro-locked body{overflow:hidden}
 
 /* Contain cover scrolling only until the invitation has been opened. */
 html.intro-locked #welcome.page-design{overscroll-behavior-y:contain}
+
+/* Avoid a content-first flash while the high-priority welcome frame decodes. */
+html.welcome-loading #welcome > .hero-card{visibility:hidden}
+/* Fixed blur layers require repainting the moving page beneath them. */
+.topbar{background:rgba(255,250,241,.97);backdrop-filter:none}
+@media(max-width:699px){
+  #invitation.page-design > .page-art,
+  #beginning.page-design > .page-art,
+  #moments.page-design > .page-art{filter:none}
+}

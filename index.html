@@ -3,13 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preload" as="image" href="assets/mithila-border_1.webp" fetchpriority="high">
+  <script>
+    document.documentElement.classList.add("welcome-loading");
+    window.welcomeLoadFallback=setTimeout(function(){
+      document.documentElement.classList.remove("welcome-loading");
+    },6000);
+  </script>
   <meta name="theme-color" content="#8f2947">
   <meta name="description" content="Priti & Uma — Wedding Invitation">
   <title>Priti ♥ Uma | Wedding Invitation</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Allura&family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600&family=Great+Vibes&family=Kalam:wght@300;400;700&family=Caveat:wght@400;500;600&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260927v09">
+  <link rel="stylesheet" href="styles.css?v=20260927v10">
 
     <meta property="og:title" content="Priti ♥ Uma — Wedding Invitation">
     <meta property="og:description" content="Two hearts, two families, one beautiful beginning. With love in our hearts and blessings all around, we invite you to celebrate the beginning of a beautiful journey together. 25 November 2026.">
@@ -45,7 +52,7 @@
 
       <!-- 01 -->
       <section class="screen hero mithila-page page-design" id="welcome" data-nav="Welcome">
-        <img class="page-art" src="assets/mithila-border_1.jpg" alt="" aria-hidden="true" loading="eager" decoding="async" />
+        <img class="page-art" src="assets/mithila-border_1.webp" alt="" aria-hidden="true" loading="eager" fetchpriority="high" decoding="async" />
         <div class="hero-card">
           <div class="hero-ornament devanagari">॥ श्री गणेशाय नमः ॥</div>
           <div class="hero-content">
@@ -54,7 +61,7 @@
           <p class="date">25 NOVEMBER 2026</p>
           <p class="quote devanagari">“दू घरक नेह सँ सजल,<br>दू मनक सुर सँ बाजल,<br>एक नव जीवनक गीत...”</p>
           <div class="hero-portrait-slot" role="img" aria-label="Faceless illustrated portrait of Priti and Uma">
-            <img src="assets/couple-faceless.jpg" alt="Faceless illustrated portrait of Priti and Uma">
+            <img src="assets/couple-faceless.webp" alt="Faceless illustrated portrait of Priti and Uma">
           </div>
           <div class="welcome-open-space">
           <div class="invite-letter-trigger" id="openInviteLetter" role="button" tabindex="0" aria-label="Open invitation letter">
@@ -69,7 +76,7 @@
 
       <!-- 02 -->
       <section class="screen paper-note mithila-page page-design" id="invitation" data-nav="Invitation">
-        <img class="page-art" src="assets/mithila-border_1.jpg" alt="" aria-hidden="true" loading="eager" decoding="async" />
+        <img class="page-art" src="assets/mithila-border_1.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" />
         <div class="desk-scene">
           <div class="petal p1">✿</div><div class="petal p2">❀</div><div class="petal p3">✾</div>
           <div class="paper rich-letter">
@@ -93,7 +100,7 @@
 
       <!-- 03 -->
       <section class="screen beginning mithila-page page-design" id="beginning" data-nav="The Beginning">
-        <img class="page-art" src="assets/mithila side borders.png" onerror="this.onerror=null;this.src='assets/mithila-border_1.jpg';" alt="" aria-hidden="true" loading="eager" decoding="async" />
+        <img class="page-art" src="assets/mithila side borders.webp" onerror="this.onerror=null;this.src='assets/mithila-border_1.webp';" alt="" aria-hidden="true" loading="lazy" decoding="async" />
         <div class="section-inner centered">
           <p class="script-title chapter-heading">One Day, A New Beginning</p>
           <div class="poem devanagari">
@@ -112,11 +119,11 @@
          id="moments" data-nav="Our Moments">
 
   <img class="page-art"
-  src="assets/mithila side borders.png"
-  onerror="this.onerror=null;this.src='assets/mithila-border_1.jpg';"
+  src="assets/mithila side borders.webp"
+  onerror="this.onerror=null;this.src='assets/mithila-border_1.webp';"
        alt=""
       aria-hidden="true"
-      loading="eager"
+      loading="lazy"
       decoding="async" />
 
   <div class="section-inner">
@@ -124,36 +131,36 @@
 
   <div class="photo-card large">
         <img src="assets/engagement_pics/DSC03603.JPG"
-          loading="eager"
-          decoding="sync"
+          loading="lazy"
+          decoding="async"
          alt="Engagement photo 1">
   </div>
 
   <div class="photo-card">
         <img src="assets/engagement_pics/DSC03770.JPG"
-          loading="eager"
-          decoding="sync"
+          loading="lazy"
+          decoding="async"
          alt="Engagement photo 2">
   </div>
 
   <div class="photo-card">
         <img src="assets/engagement_pics/DSC03776.JPG"
-          loading="eager"
-          decoding="sync"
+          loading="lazy"
+          decoding="async"
          alt="Engagement photo 3">
   </div>
 
   <div class="photo-card">
         <img src="assets/engagement_pics/DSC03773.JPG"
-          loading="eager"
-          decoding="sync"
+          loading="lazy"
+          decoding="async"
          alt="Engagement photo 4">
   </div>
 
   <div class="photo-card">
         <img src="assets/engagement_pics/DSC03620.JPG"
-          loading="eager"
-          decoding="sync"
+          loading="lazy"
+          decoding="async"
          alt="Engagement photo 5">
   </div>
 
@@ -169,7 +176,7 @@
 
       <!-- 05
       <section class="screen families floral-screen mithila-page page-design" id="families" data-nav="Our Families">
-        <img class="page-art" src="assets/mithila side borders.png" onerror="this.onerror=null;this.src='assets/mithila-border_1.jpg';" alt="" aria-hidden="true" loading="eager" decoding="async" />
+        <img class="page-art" src="assets/mithila side borders.webp" onerror="this.onerror=null;this.src='assets/mithila-border_1.webp';" alt="" aria-hidden="true" loading="lazy" decoding="async" />
         <div class="section-inner">
           <p class="script-title">Our Families</p>
           <p class="subtitle">TWO FAMILIES · ONE CELEBRATION</p>
@@ -194,7 +201,7 @@
 
       <!-- 06 -->
       <section class="screen events floral-screen mithila-page page-design" id="events" data-nav="Wedding Celebrations">
-        <img class="page-art" src="assets/mithila side borders.png" onerror="this.onerror=null;this.src='assets/mithila-border_1.jpg';" alt="" aria-hidden="true" loading="eager" decoding="async" />
+        <img class="page-art" src="assets/mithila side borders.webp" onerror="this.onerror=null;this.src='assets/mithila-border_1.webp';" alt="" aria-hidden="true" loading="lazy" decoding="async" />
         <div class="section-inner">
           <p class="script-title">The Wedding Celebrations</p>
           <p class="subtitle">A FEW DAYS OF LOVE, JOY & TOGETHERNESS</p><p class="event-hint">Choose an event, then tap <b>View Location</b> →</p>
@@ -257,7 +264,7 @@
 
       <!-- 09 -->
       <section class="screen countdown mithila-page page-design" id="countdown" data-nav="Countdown">
-        <img class="page-art" src="assets/mithila lower border.png" onerror="this.onerror=null;this.src='assets/mithila-border_1.jpg';" alt="" aria-hidden="true" loading="eager" decoding="async" />
+        <img class="page-art" src="assets/mithila lower border.webp" onerror="this.onerror=null;this.src='assets/mithila-border_1.webp';" alt="" aria-hidden="true" loading="lazy" decoding="async" />
         <div class="section-inner centered">
           <p class="script-title">The Big Day Is Almost Here!</p>
           <p class="subtitle">COUNTING EVERY MOMENT</p>
@@ -305,7 +312,7 @@
     </div>
 </div>
 
-  <script src="script.js?v=20260927v09"></script>
+  <script src="script.js?v=20260927v10"></script>
 </body>
 </html>
 

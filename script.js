@@ -28,13 +28,34 @@ let invitationLandingScrollY = null;
 // Lock navigation beyond the cover, while allowing its content to scroll on
 // unusually short screens or when the visitor uses larger text.
 document.documentElement.classList.add("intro-locked");
+let welcomeViewportFrame=0;
+let welcomeViewportWidth=0;
 function syncWelcomeViewport(){
-  const height=window.visualViewport?.height || window.innerHeight;
-  document.documentElement.style.setProperty("--welcome-viewport",`${height}px`);
+  // Browser toolbar movement must not resize/reflow the cover during scrolling.
+  if(introUnlocked && welcomeViewportWidth===window.innerWidth) return;
+  cancelAnimationFrame(welcomeViewportFrame);
+  welcomeViewportFrame=requestAnimationFrame(()=>{
+    welcomeViewportWidth=window.innerWidth;
+    const height=window.visualViewport?.height || window.innerHeight;
+    document.documentElement.style.setProperty("--welcome-viewport",`${height}px`);
+  });
 }
 syncWelcomeViewport();
-window.addEventListener("resize",syncWelcomeViewport);
-window.visualViewport?.addEventListener("resize",syncWelcomeViewport);
+window.addEventListener("resize",syncWelcomeViewport,{passive:true});
+window.visualViewport?.addEventListener("resize",syncWelcomeViewport,{passive:true});
+
+// Reveal the welcome content together with its decoded frame, even on a cold load.
+const welcomeFrame=document.querySelector("#welcome > .page-art");
+async function revealWelcome(){
+  try{await welcomeFrame?.decode();}catch(error){/* Keep the invitation usable if the image fails. */}
+  clearTimeout(window.welcomeLoadFallback);
+  document.documentElement.classList.remove("welcome-loading");
+}
+if(welcomeFrame?.complete) revealWelcome();
+else{
+  welcomeFrame?.addEventListener("load",revealWelcome,{once:true});
+  welcomeFrame?.addEventListener("error",revealWelcome,{once:true});
+}
 
 const inviteLetterTrigger = document.getElementById("openInviteLetter");
 
@@ -180,10 +201,7 @@ function syncMusicUI(){
 }
 document.getElementById("musicBtn").onclick=toggleMusic;
 
-// Try to start as soon as the site opens; most mobile browsers block that
-// without a real tap, so keep retrying on every genuine tap (not a scroll
-// drag, which also fires touchstart) until it actually succeeds.
-ensurePlaying();
+// Load and decode music only after a click, keeping initial bandwidth for the frame.
 const tryStartFromInteraction=(event)=>{
   const isMusicBtn=event.target.closest && event.target.closest("#musicBtn");
   if(isMusicBtn) return; // the button's own click handler already covers this
@@ -195,7 +213,7 @@ const tryStartFromInteraction=(event)=>{
   ensurePlaying();
 };
 document.addEventListener("click",tryStartFromInteraction);
-document.addEventListener("touchend",tryStartFromInteraction);
+
 
 function stopMusicWhenPageIsHidden(){
   if(document.visibilityState==="hidden"){
