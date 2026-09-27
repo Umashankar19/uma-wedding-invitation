@@ -40,6 +40,7 @@ const inviteLetterTrigger = document.getElementById("openInviteLetter");
 
 function openInvitationFromLetter() {
   if (introUnlocked) {
+    document.getElementById("invitation")?.scrollIntoView({ behavior: "smooth" });
     return;
   }
 

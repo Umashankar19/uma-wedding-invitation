@@ -2142,7 +2142,7 @@ html.intro-locked, html.intro-locked body{overflow:hidden}
   padding-bottom:max(12px, env(safe-area-inset-bottom)) !important;
   align-items:flex-start;
   overflow-y:auto;
-  overscroll-behavior-y:contain;
+  overscroll-behavior-y:auto;
   scroll-padding-top:56px;
 }
 #welcome.page-design > .hero-card{
@@ -2205,3 +2205,6 @@ html.intro-locked, html.intro-locked body{overflow:hidden}
   padding:12px 0;
 }
 #welcome .invite-letter-trigger{margin:0}
+
+/* Contain cover scrolling only until the invitation has been opened. */
+html.intro-locked #welcome.page-design{overscroll-behavior-y:contain}
