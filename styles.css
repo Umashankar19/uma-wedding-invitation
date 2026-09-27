@@ -2176,3 +2176,32 @@ html.intro-locked, html.intro-locked body{overflow:hidden}
   #welcome .hero-portrait-slot{height:clamp(60px, calc(var(--welcome-viewport) * .18), 110px)}
   #welcome .quote{font-size:13px;line-height:1.3}
 }
+
+/* Center the envelope between the portrait and the frame's inner lower edge.
+   The artwork's lower border occupies approximately 8% of its height. */
+#welcome.page-design{
+  padding-bottom:max(calc(var(--welcome-viewport) * .08), env(safe-area-inset-bottom)) !important;
+}
+#welcome.page-design > .hero-card{
+  min-height:100%;
+  padding-bottom:0;
+}
+#welcome .hero-content{
+  display:flex;
+  flex-direction:column;
+  flex:1;
+}
+#welcome .hero-content > *{flex-shrink:0}
+#welcome .hero-portrait-slot{
+  align-self:center;
+  margin-bottom:0;
+}
+#welcome .welcome-open-space{
+  flex:1 0 auto;
+  min-height:88px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:12px 0;
+}
+#welcome .invite-letter-trigger{margin:0}
