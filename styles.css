@@ -2130,3 +2130,49 @@ footer {
 .invitation-share-actions button { padding: 10px 16px; border: 1px solid #805147; border-radius: 8px; background: #fff9ef; color: #472b31; font: inherit; cursor: pointer; }
 #chooseInvitationApp { background: #733943; color: white; }
 .invitation-share-actions button:disabled { opacity: .5; cursor: wait; }
+
+/* Fit the cover to the actual browser viewport, including mobile toolbars. */
+:root{--welcome-viewport:100vh}
+@supports (height:100dvh){:root{--welcome-viewport:100dvh}}
+html.intro-locked, html.intro-locked body{overflow:hidden}
+#welcome.page-design{
+  height:var(--welcome-viewport);
+  min-height:0;
+  padding-top:56px !important;
+  padding-bottom:max(12px, env(safe-area-inset-bottom)) !important;
+  align-items:flex-start;
+  overflow-y:auto;
+  overscroll-behavior-y:contain;
+  scroll-padding-top:56px;
+}
+#welcome.page-design > .hero-card{
+  min-height:0;
+  flex-shrink:0;
+  padding:8px 8px 12px;
+  overflow:visible;
+}
+#welcome .hero-content{margin-top:4px}
+#welcome .hero-ornament{font-size:clamp(12px, calc(var(--welcome-viewport) * .023), 18px)}
+#welcome .hero-kicker{font-size:clamp(13px, calc(var(--welcome-viewport) * .026), 20px);line-height:1.12;margin:4px 0}
+#welcome h1{font-size:clamp(38px, calc(var(--welcome-viewport) * .085), 70px);line-height:1;margin:6px 0}
+#welcome h1 span{font-size:.48em}
+#welcome .date{font-size:clamp(12px, calc(var(--welcome-viewport) * .022), 17px);letter-spacing:1.5px;margin:8px 0}
+#welcome .quote{font-size:clamp(13px, calc(var(--welcome-viewport) * .023), 18px);line-height:1.4;margin:6px auto 10px}
+#welcome .hero-portrait-slot{
+  height:clamp(70px, calc(var(--welcome-viewport) * .25), 250px);
+  width:auto;
+  max-width:76%;
+  aspect-ratio:3 / 4;
+  margin:6px auto 10px;
+}
+#welcome .invite-letter-trigger{min-height:60px;width:min(188px,90%);margin:6px auto 0}
+@media(min-width:700px){
+  #welcome.page-design{height:calc(var(--welcome-viewport) - 25px)}
+}
+
+@media(max-width:360px), (max-height:560px){
+  #welcome h1{font-size:clamp(30px, 10vw, 42px)}
+  #welcome .hero-kicker{font-size:13px}
+  #welcome .hero-portrait-slot{height:clamp(60px, calc(var(--welcome-viewport) * .18), 110px)}
+  #welcome .quote{font-size:13px;line-height:1.3}
+}

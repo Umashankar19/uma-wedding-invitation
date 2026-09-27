@@ -25,33 +25,16 @@ window.addEventListener("pageshow", openAtWelcome);
 let introUnlocked = false;
 let invitationLandingScrollY = null;
 
-function preventLockedScroll(event) {
-  if (!introUnlocked) {
-    event.preventDefault();
-  }
+// Lock navigation beyond the cover, while allowing its content to scroll on
+// unusually short screens or when the visitor uses larger text.
+document.documentElement.classList.add("intro-locked");
+function syncWelcomeViewport(){
+  const height=window.visualViewport?.height || window.innerHeight;
+  document.documentElement.style.setProperty("--welcome-viewport",`${height}px`);
 }
-
-function preventLockedKeys(event) {
-  if (introUnlocked) {
-    return;
-  }
-
-  const blockedKeys = [
-    "ArrowDown",
-    "PageDown",
-    "Space",
-    "End",
-    "Home"
-  ];
-
-  if (blockedKeys.includes(event.code) || blockedKeys.includes(event.key)) {
-    event.preventDefault();
-  }
-}
-
-window.addEventListener("wheel", preventLockedScroll, { passive: false });
-window.addEventListener("touchmove", preventLockedScroll, { passive: false });
-window.addEventListener("keydown", preventLockedKeys);
+syncWelcomeViewport();
+window.addEventListener("resize",syncWelcomeViewport);
+window.visualViewport?.addEventListener("resize",syncWelcomeViewport);
 
 const inviteLetterTrigger = document.getElementById("openInviteLetter");
 
@@ -61,6 +44,7 @@ function openInvitationFromLetter() {
   }
 
   introUnlocked = true;
+  document.documentElement.classList.remove("intro-locked");
   inviteLetterTrigger?.classList.add("open");
 
   window.setTimeout(function () {
